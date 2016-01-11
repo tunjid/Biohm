@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="androidplot-core-0.9.4">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/biohm/build/intermediates/exploded-aar/com.androidplot/androidplot-core/0.9.4/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/biohm/build/intermediates/exploded-aar/com.androidplot/androidplot-core/0.9.4/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.androidplot/androidplot-core/0.9.4/2b164131b2301ce11908d14c7372c4deb6a5ae2/androidplot-core-0.9.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
