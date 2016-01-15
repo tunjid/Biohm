@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Biohm</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="edit_message">Enter a message</string>
+    <string name="button_send">Send</string>
+    <string name="title_activity_display_message">My Message</string>
+    <string name="error">Sorry, there was an error</string>
+    <string name="ActAndPair_prompt">Attempting to turn on bluetooth.</string>
+
+    <string name="scan_request">Tap the button below to begin a search for a compatible BLE device.</string>
+    <string name="button_scan">Scan</string>
+    <string name="title_activity_act_and_pair">ActAndPair</string>
+    <string name="title_activity_pair">Pair</string>
+    <string name="title_activity_scan">Scan For BLE Devices</string>
+    <string name="title_activity_device_scan">DeviceScanActivity</string>
+    <string name="title_activity_device_control">DeviceControlActivity</string>
+    <string name="service_name_BluetoothLeService">BluetoothLeService</string>
+    <string name="service_name_ServiceBinder">ServiceBinder</string>
+    <string name="buttonNo">That\'s no fun. :/</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="sampling_data">Sampling data.</string>
+    <string name="connected_to_device">Connected to device.</string>
+    <string name="disconnected_from_device">Tap here to go back to scanning.</string>
+    <string name="monitor">Tap to monitor data.</string>
+    <string name="showMain">Main</string>
+    <string name="showGraph">Graph</string>
+    <string name="uc">Under Construction.</string>
+    <string name="desc">Under Construction.</string>
+    <string name="mime_options">Biohm Options</string>
+    <string name="set_sample_rate">Set Sample Rate</string>
+    <string name="sample_rate_options">Hertz. Values are between 5 and 90.</string>
+    <string name="set_frequency_sweep">Set Frequency Sweep</string>
+    <string name="stop_background">Stop Background Service</string>
+    <string name="no_zero">Failed: Cannot set a frequency of "0" </string>
+    <string name="start">Start</string>
+    <string name="back_to_scanning">Going back to scanning&#8230;</string>
+    <string name="parameter_summary">Parameter Summary</string>
+    <string name="bt_attempt">Attempting to turn on Bluetooth&#8230;</string>
+    <string name="bt_already_on">Bluetooth is already on.</string>
+    <string name="bt_turned_on">Bluetooth was successfully turned on.</string>
+    <string name="bt_denied">It\'s either you denied the bluetooth request, 
+        or there is a problem with your bluetooth adapter. Please try again later.</string>
+    <string name="raw">Raw Data</string>
+    <string name="fluid_status">Fluid Status</string>
+    <string name="heart_rate">Heart Rate</string>
+    <string name="pwv">PWV</string>
+    <string name="f_peak">f<sub><small>p</small></sub></string>
+    <string name="writer">Writing to characteristic&#8230;</string>
+    <string-array name="LongTermOptionsArray">
+        <item>Live Data</item>
+        <item>Past Hour</item>
+        <item>Past 12 Hours</item>
+        <item>Export Data</item>
+        <item>Back to Scanning</item>
+    </string-array>
+
+    <!-- Imported strings from example -->
+    <string name="ble_not_supported">BLE is not supported</string>
+    <string name="label_data">Data:</string>
+    <string name="label_device_address">Device address:</string>
+    <string name="label_device_name">Device name:</string>
+    <string name="label_state">State:</string>
+    <string name="no_data">No data</string>
+    <string name="connected">Connected</string>
+    <string name="connecting">Connecting&#8230;</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="title_devices">BLE Device Scan</string>
+    <string name="error_bluetooth_not_supported">Bluetooth not supported.</string>
+    <string name="unknown_device">Unknown device</string>
+    <string name="unknown_characteristic">Unknown characteristic</string>
+    <string name="unknown_service">Unknown service</string>
+
+    <!-- Start Activity -->
+    <string name="main_splash_screen">Hello! Welcome to Biohm.
+         This app requires you have a Bluetooth Low Energy (BLE) compatible device.
+         Would you like to turn on Bluetooth and begin searching?</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
+    <!-- Start Activity -->
+
+    <!-- OverView Activity -->
+    <string name="analysis">Analysis</string>
+    <string name="activity">Activity</string>
+    <string name="enable_frequency_sweep">Enable Frequency Sweep</string>
+    <string name="set_start_freq">Start frequency in KHz.</string>
+    <string name="set_step_size">Step size in Khz.</string>
+    <string name="set_num_of_increments">Number of frequency increments.</string>
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
+    <string name="single_freq">Single</string>
+    <string name="multi_freq">Sweep</string>
+    <string name="set_fail">Failed: Empty fields or invalid characters</string>
+    <string name="freq_sweep_enabled">Freequency sweep enabled</string>
+    <string name="freq_sweep_disabled">Frequency sweep disabled</string>
+    <string name="check_value">Failed: Check your frquency, step size, or number of steps </string>
+    <!-- OverView Activity -->
+
+    <!-- Control Fragment -->
+    <string name="exportToText">Export</string>
+    <string name="clearTextFile">Clear</string>
+    <string name="enableNotifications">Notifications</string>
+    <string name="sample_rate">S.R</string>
+    <string name="start_freq">S.F</string>
+    <string name="step_size">S.S</string>
+    <string name="num_of_increments">N.O.I</string>
+    <string name="not_applicable">-</string>
+    <string name="kilohertz">%1$d KHz</string>
+    <string name="number">%1$d</string>
+    <!-- Control Fragment -->
+
+    <!-- Activity Fragment -->
+    <!-- Activity Fragment -->
+
+    <!-- Analysis Fragment -->
+    <string name="re">Re</string>
+    <string name="ri">Ri</string>
+    <string name="c">C</string>
+    <string name="alpha">α</string>
+    <string name="rmse">RMSE</string>
+    <string name="rsq">R<sup>2</sup></string>
+    <!-- Analysis Fragment -->
+
+    <!-- Menu items -->
+    <string name="menu_connect">Connect</string>
+    <string name="menu_disconnect">Disconnect</string>
+    <string name="menu_scan">Scan</string>
+    <string name="menu_stop">Stop</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="title_activity_button_no">Welp</string>
+    <string name="title_activity_accelerometer_data_parser">AccelerometerDataParser</string>
+    <string name="set_time">Set sampling time</string>
+    <string name="name_text_file">Name text file</string>
+    <string name="text_file_name">Enter new text file name here.</string>
+    <string name="live_data">Live Data</string>
+    <string name="past_hour">Past Hour</string>
+    <string name="past_12">Past 12 Hours</string>
+    <string name="data_export">Data Export</string>
+    <string name="back_to_scan">Back to Scanning</string>
+    <string name="title_activity_test">Test</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="title_activity_long_term">LongTerm</string>
+</resources>

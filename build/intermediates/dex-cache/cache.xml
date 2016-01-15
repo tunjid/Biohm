@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/design/23.1.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="379471b2bd17d9737c050345c08e8c7d16589784">
+        <dex dex="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/classes-35114c3d2cab04cbc574ed96f1bce5cd824dc5ad.jar" />
+    </item>
+    <item
+        jar="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.1.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="5e412e954a24c5310a459c09870e4e2081aceb03">
+        <dex dex="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/classes-beffff4449471997d07ecb07715b1e6b23129807.jar" />
+    </item>
+    <item
+        jar="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.1.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="09c5e804bc67fc0580360043dff067df574a60d4">
+        <dex dex="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/classes-75b28526e33de34705476030f18621e5416fc1db.jar" />
+    </item>
+    <item
+        jar="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/jars/libs/internal_impl-23.1.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="a4de9c81ae239414e1ed0f86441b02abaf29bca9">
+        <dex dex="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/internal_impl-23.1.1-f472c37b9c9caafb1e5d0e70121435cc6d291726.jar" />
+    </item>
+    <item
+        jar="/Users/Shemanigans/.gradle/caches/modules-2/files-2.1/com.netflix.rxjava/rxjava-core/0.20.4/bbb645aee7782cd4ba838442f42edf1a1d352604/rxjava-core-0.20.4.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="bbb645aee7782cd4ba838442f42edf1a1d352604">
+        <dex dex="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/rxjava-core-0.20.4-5f01d38204fa79d76fa2cf07e76a185b3c6cda3f.jar" />
+    </item>
+    <item
+        jar="/Users/Shemanigans/.gradle/caches/modules-2/files-2.1/com.netflix.rxjava/rxjava-android/0.20.4/e099d9501cff3c13949489dbb6985b8429c59292/rxjava-android-0.20.4.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="e099d9501cff3c13949489dbb6985b8429c59292">
+        <dex dex="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/rxjava-android-0.20.4-7a04dc4b4e5ba0e746d5a297bc7c7b4ce2cafc67.jar" />
+    </item>
+    <item
+        jar="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.jpardogo.materialtabstrip/library/1.0.8/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="e724073d032731be77fad0f993e2970fb4429e3a">
+        <dex dex="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/classes-58209557d0046fb965e6e7a7c1068700bd16cb85.jar" />
+    </item>
+    <item
+        jar="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.androidplot/androidplot-core/0.9.4/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="3ed59a79f48ba9ed951c355b9da2af07c69429bc">
+        <dex dex="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/classes-4c56364a19035edcbdeb8aef4e87f9643204af83.jar" />
+    </item>
+    <item
+        jar="/Users/Shemanigans/Development/android-sdk-macosx/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
+        <dex dex="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/support-annotations-23.1.1-2396b95b86c3f8c0dac3543921db962fd93b7d86.jar" />
+    </item>
+    <item
+        jar="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="6cbc7773921fcfedbe55657578f0cbfe614778dc">
+        <dex dex="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/classes-7bad66c5451b031723145e7b5c8f3ac42e8d9d02.jar" />
+    </item>
+    <item
+        jar="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="5c5699834e9722f1c288fea2de82725d078ba127">
+        <dex dex="/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/classes-8b25d3b010370b41425c822385072c5fdfdc5d00.jar" />
+    </item>
+
+</items>

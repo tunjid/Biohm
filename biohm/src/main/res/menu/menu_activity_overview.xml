@@ -1,0 +1,25 @@
+<menu xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.shemanigans.mime.activities.OverviewActivity">
+    <!--
+    <item
+        android:id="@+id/menu_disconnect"
+        android:orderInCategory="101"
+        android:title="@string/menu_disconnect"
+        compat:showAsAction="withText|ifRoom"/>
+    <item
+        android:id="@+id/name_text_file"
+        android:orderInCategory="102"
+        android:title="@string/name_text_file"
+        compat:showAsAction="never"/>
+    <item
+        android:id="@+id/set_sample_rate"
+        android:orderInCategory="103"
+        android:title="@string/set_sample_rate"
+        compat:showAsAction="never"/>
+    <item
+        android:id="@+id/set_frequency_sweep"
+        android:orderInCategory="104"
+        android:title="@string/set_frequency_sweep"
+        compat:showAsAction="never"/>
+        -->
+</menu>

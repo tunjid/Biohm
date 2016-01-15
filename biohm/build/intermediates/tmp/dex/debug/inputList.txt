@@ -1,0 +1,12 @@
+/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/classes/debug
+/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/support-annotations-23.0.1-b4da6c692d7ede7b034401e725e564592a7cb0e2.jar
+/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/classes-c291142a69e688ce42f701716d8dfbc96b91c40b.jar
+/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/classes-b018261ab23bf77f0d7701a33684f70d0aa5665d.jar
+/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/rxjava-android-0.20.4-7a04dc4b4e5ba0e746d5a297bc7c7b4ce2cafc67.jar
+/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/androidplot-core-0.6.1-4eb1560c781b163e1e5b97e367c330815bf4f037.jar
+/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/classes-37ef96cbb02ed1df863bccb98e9749830e523c8f.jar
+/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/internal_impl-23.0.1-3088dc19717e140304f98110e3a5737b27086d6d.jar
+/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/classes-6f7c09f50ec79383abfcde1bd71a7944d1966028.jar
+/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/rxjava-core-0.20.4-5f01d38204fa79d76fa2cf07e76a185b3c6cda3f.jar
+/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/classes-c865e6cf780ad9d173c153ff06924bdf92a1e22c.jar
+/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/pre-dexed/debug/classes-5425f002dc56f57e532eb9a6e7edf3a174592aa2.jar

@@ -1,0 +1,162 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:2:1-87:12
+	package
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:2:11-41
+		INJECTED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml
+		INJECTED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml
+	android:versionName
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:5:5-30
+	android:versionCode
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:4:5-28
+		INJECTED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml
+		INJECTED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:3:5-63
+uses-sdk
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support:design:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/design/23.1.1/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:appcompat-v7:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:recyclerview-v7:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.1.1/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:cardview-v7:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.1.1/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:appcompat-v7:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:recyclerview-v7:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.1.1/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml:20:5-43
+MERGED from [com.jpardogo.materialtabstrip:library:1.0.8] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.jpardogo.materialtabstrip/library/1.0.8/AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support:support-v4:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml:20:5-43
+MERGED from [com.androidplot:androidplot-core:0.9.4] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.androidplot/androidplot-core/0.9.4/AndroidManifest.xml:26:5-28:41
+	android:targetSdkVersion
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:9:9-38
+		INJECTED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml
+		INJECTED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:8:9-35
+		INJECTED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml
+		INJECTED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml
+uses-permission#android.permission.BLUETOOTH
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:11:5-68
+	android:name
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:11:22-65
+uses-permission#android.permission.BLUETOOTH_ADMIN
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:12:5-74
+	android:name
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:12:22-71
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:13:5-81
+	android:name
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:13:22-78
+uses-feature#android.hardware.bluetooth_le
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:15:5-17:35
+	android:required
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:17:9-32
+	android:name
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:16:9-53
+application
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:18:5-86:19
+MERGED from [com.android.support:design:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/design/23.1.1/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:appcompat-v7:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:cardview-v7:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.1.1/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:appcompat-v7:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml:22:5-20
+MERGED from [com.jpardogo.materialtabstrip:library:1.0.8] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.jpardogo.materialtabstrip/library/1.0.8/AndroidManifest.xml:9:5-20
+MERGED from [com.android.support:support-v4:23.1.1] /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/AndroidManifest.xml:22:5-20
+	android:label
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:21:9-41
+	android:allowBackup
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:19:9-35
+	android:icon
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:20:9-45
+	android:theme
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:23:9-44
+	android:logo
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:22:9-49
+activity#com.shemanigans.mime.activities.StartActivity
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:24:9-31:20
+	android:label
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:26:13-45
+	android:name
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:25:13-53
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:27:13-30:29
+action#android.intent.action.MAIN
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:28:17-69
+	android:name
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:28:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:29:17-77
+	android:name
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:29:27-74
+activity#com.shemanigans.mime.activities.DisplayMessageActivity
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:32:9-39:20
+	android:label
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:34:13-67
+	android:parentActivityName
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:35:13-67
+	android:name
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:33:13-62
+meta-data#android.support.PARENT_ACTIVITY
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:36:13-38:61
+	android:value
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:38:17-58
+	android:name
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:37:17-63
+activity#com.shemanigans.mime.activities.PairActivity
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:40:9-47:20
+	android:label
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:42:13-64
+	android:parentActivityName
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:43:13-67
+	android:name
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:41:13-52
+activity#com.shemanigans.mime.Pair
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:48:9-55:20
+	android:label
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:50:13-56
+	android:parentActivityName
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:51:13-67
+	android:name
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:49:13-33
+activity#com.shemanigans.mime.activities.ScanActivity
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:56:9-63:20
+	android:label
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:58:13-56
+	android:parentActivityName
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:59:13-67
+	android:name
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:57:13-52
+activity#com.shemanigans.mime.ButtonNo
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:64:9-71:20
+	android:label
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:66:13-61
+	android:parentActivityName
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:67:13-67
+	android:name
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:65:13-37
+service#com.shemanigans.mime.services.BluetoothLeService
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:73:9-76:71
+	android:enabled
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:75:13-35
+	android:label
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:76:13-68
+	android:name
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:74:13-56
+activity#com.shemanigans.mime.activities.OverviewActivity
+ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:77:9-85:20
+	android:label
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:79:13-61
+	android:parentActivityName
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:81:13-66
+	android:launchMode
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:80:13-44
+	android:name
+		ADDED from /Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/AndroidManifest.xml:78:13-56

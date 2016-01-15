@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:compat="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        compat:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_refresh"
+        android:checkable="false"
+        android:orderInCategory="1"
+        android:title="@string/menu_refresh"
+        compat:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_connect"
+        android:orderInCategory="100"
+        compat:showAsAction="ifRoom|withText"
+        android:title="@string/menu_connect"/>
+    <item
+        android:id="@+id/menu_disconnect"
+        android:orderInCategory="101"
+        android:title="@string/menu_disconnect"
+        compat:showAsAction="ifRoom|withText"/>
+    <item
+        android:id="@+id/name_text_file"
+        android:orderInCategory="102"
+        compat:showAsAction="never"
+        android:title="@string/name_text_file"/>
+    <item
+        android:id="@+id/set_sample_rate"
+        android:orderInCategory="103"
+        android:title="@string/set_sample_rate"
+        compat:showAsAction="never"/>
+    <item
+        android:id="@+id/set_frequency_sweep"
+        android:orderInCategory="103"
+        android:title="@string/set_frequency_sweep"
+        compat:showAsAction="never"/>
+
+</menu><!-- From: file:/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/res/menu/gatt_services.xml -->

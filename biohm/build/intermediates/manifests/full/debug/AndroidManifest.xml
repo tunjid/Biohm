@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.shemanigans.mime"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="18"
+        android:targetSdkVersion="23" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:logo="@drawable/ic_notification"
+        android:theme="@style/AppBaseTheme" >
+        <activity
+            android:name="com.shemanigans.mime.activities.StartActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.shemanigans.mime.activities.DisplayMessageActivity"
+            android:label="@string/title_activity_display_message"
+            android:parentActivityName="com.shemanigans.mime.activities.StartActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.StartActivity" />
+        </activity>
+        <activity
+            android:name="com.shemanigans.mime.activities.PairActivity"
+            android:label="@string/title_activity_act_and_pair"
+            android:parentActivityName="com.shemanigans.mime.activities.StartActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.StartActivity" />
+        </activity>
+        <activity
+            android:name="com.shemanigans.mime.Pair"
+            android:label="@string/title_activity_pair"
+            android:parentActivityName="com.shemanigans.mime.activities.StartActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.StartActivity" />
+        </activity>
+        <activity
+            android:name="com.shemanigans.mime.activities.ScanActivity"
+            android:label="@string/title_activity_scan"
+            android:parentActivityName="com.shemanigans.mime.activities.StartActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.StartActivity" />
+        </activity>
+        <activity
+            android:name="com.shemanigans.mime.ButtonNo"
+            android:label="@string/title_activity_button_no"
+            android:parentActivityName="com.shemanigans.mime.activities.StartActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.StartActivity" />
+        </activity>
+
+        <service
+            android:name="com.shemanigans.mime.services.BluetoothLeService"
+            android:enabled="true"
+            android:label="@string/service_name_BluetoothLeService" />
+
+        <activity
+            android:name="com.shemanigans.mime.activities.OverviewActivity"
+            android:label="@string/title_activity_long_term"
+            android:launchMode="singleTask"
+            android:parentActivityName="com.shemanigans.mime.activities.ScanActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.ScanActivity" />
+        </activity>
+    </application>
+
+</manifest>
