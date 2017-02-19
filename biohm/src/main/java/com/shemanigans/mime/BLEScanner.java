@@ -14,6 +14,7 @@ import android.os.Build;
  */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class BLEScanner {
+    private final boolean hasLollipop;
     private final BleScanCallback callback;
     private final BluetoothAdapter bluetoothAdapter;
 
@@ -36,6 +37,7 @@ public class BLEScanner {
     };
 
     public BLEScanner(BleScanCallback callback, BluetoothAdapter bluetoothAdapter) {
+        hasLollipop = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
         this.callback = callback;
         this.bluetoothAdapter = bluetoothAdapter;
     }
@@ -46,22 +48,17 @@ public class BLEScanner {
 
     @SuppressWarnings("deprecation")
     public void startScan() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            bluetoothAdapter.getBluetoothLeScanner().startScan(newCallback);
-        }
-        else {
-            bluetoothAdapter.startLeScan(oldCallback);
-        }
+//        if (hasLollipop) bluetoothAdapter.getBluetoothLeScanner().startScan(newCallback);
+//        else bluetoothAdapter.startLeScan(oldCallback);
+         bluetoothAdapter.startLeScan(oldCallback);
+
     }
 
     @SuppressWarnings("deprecation")
     public void stopScan() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            bluetoothAdapter.getBluetoothLeScanner().stopScan(newCallback);
-        }
-        else {
-            bluetoothAdapter.stopLeScan(oldCallback);
-        }
+//        if (hasLollipop) bluetoothAdapter.getBluetoothLeScanner().stopScan(newCallback);
+//        else bluetoothAdapter.stopLeScan(oldCallback);
+         bluetoothAdapter.stopLeScan(oldCallback);
     }
 
     /**

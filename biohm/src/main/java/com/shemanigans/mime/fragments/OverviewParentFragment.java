@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -100,8 +99,6 @@ public class OverviewParentFragment extends BroadcastReceiverFragment
         inflater.inflate(R.menu.menu_fragment_overview, menu);
         menu.findItem(R.id.menu_connect).setVisible(!connected);
         menu.findItem(R.id.menu_disconnect).setVisible(connected);
-
-        Log.i("Test", "Connected? " + connected);
 
         super.onCreateOptionsMenu(menu, inflater);
     }

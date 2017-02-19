@@ -1,5 +1,6 @@
 package com.shemanigans.mime.services;
 
+import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -15,6 +16,7 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -97,30 +99,6 @@ public class BluetoothLeService extends Service
 
     private final IBinder mBinder = new LocalBinder();
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
-        if (intent != null) {
-            deviceName = intent.getStringExtra(DEVICE_NAME);
-            deviceAddress = intent.getStringExtra(DEVICE_ADDRESS);
-
-            if (!initialize()) {
-                Log.e(TAG, "Unable to initialize Bluetooth");
-            }
-            // Automatically connects to the device upon successful start-up initialization.
-
-            else {
-                deviceAddress = intent.getStringExtra(BluetoothLeService.DEVICE_ADDRESS);
-                connect(deviceAddress);
-            }
-        }
-
-        else {
-            stopSelf();
-        }
-        return super.onStartCommand(intent, flags, startId);
-    }
-
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
     private final BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
@@ -131,12 +109,16 @@ public class BluetoothLeService extends Service
                 case BluetoothProfile.STATE_CONNECTED:
                     connectionState = GATT_CONNECTED;
                     bluetoothGatt.discoverServices();
+                    Log.i(TAG, "STATE = CONNECTED");
                     break;
                 case BluetoothProfile.STATE_CONNECTING:
                     connectionState = GATT_CONNECTING;
+                    Log.i(TAG, "STATE = CONNECTING");
                     break;
                 case BluetoothProfile.STATE_DISCONNECTED:
                     connectionState = GATT_DISCONNECTED;
+                    Log.i(TAG, "STATE DISCONNECTED");
+
 
                     if (!isBound) { // Not bound anymore, update notification
                         stopForeground(true);
@@ -224,6 +206,30 @@ public class BluetoothLeService extends Service
             }
         }
     };
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        if (intent != null) {
+            deviceName = intent.getStringExtra(DEVICE_NAME);
+            deviceAddress = intent.getStringExtra(DEVICE_ADDRESS);
+
+            if (!initialize()) {
+                Log.e(TAG, "Unable to initialize Bluetooth");
+            }
+            // Automatically connects to the device upon successful start-up initialization.
+
+            else {
+                deviceAddress = intent.getStringExtra(BluetoothLeService.DEVICE_ADDRESS);
+                connect(deviceAddress);
+            }
+        }
+
+        else {
+            stopSelf();
+        }
+        return super.onStartCommand(intent, flags, startId);
+    }
 
     public String getDeviceAddress() {
         return deviceAddress;
@@ -318,6 +324,7 @@ public class BluetoothLeService extends Service
      * {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
      * callback.
      */
+    @TargetApi(Build.VERSION_CODES.M)
     public boolean connect(final String address) {
         if (bluetoothAdapter == null || address == null) {
             showToast(this, "BluetoothAdapter not initialized or unspecified address.");
@@ -325,9 +332,7 @@ public class BluetoothLeService extends Service
         }
 
         // Previously connected device.  Try to reconnect.
-        if (deviceAddress != null
-                && address.equals(deviceAddress)
-                && bluetoothGatt != null) {
+        if (deviceAddress != null && address.equals(deviceAddress) && bluetoothGatt != null) {
 
             showToast(this, "Trying to use an existing mBluetoothGatt for connection.");
 
@@ -345,17 +350,16 @@ public class BluetoothLeService extends Service
 
         final BluetoothDevice bluetoothDevice = bluetoothAdapter.getRemoteDevice(address);
 
-        /*if (device == null) {
-            Log.w(TAG, "Device not found.  Unable to connect.");
-            return false;
-        }*/
-
         // We want to directly connect to the device, so we are setting the autoConnect
         // parameter to false.
-        bluetoothGatt = bluetoothDevice.connectGatt(this, false, gattCallback);
+        bluetoothGatt = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                ? bluetoothDevice.connectGatt(this, false, gattCallback, BluetoothDevice.TRANSPORT_LE)
+                : bluetoothDevice.connectGatt(this, false, gattCallback);
+
         deviceAddress = address;
         connectionState = GATT_CONNECTING;
         showToast(this, "Trying to create a new connection...");
+
         return true;
     }
 

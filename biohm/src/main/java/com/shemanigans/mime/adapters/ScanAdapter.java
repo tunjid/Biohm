@@ -31,7 +31,7 @@ public class ScanAdapter extends RecyclerView.Adapter<ScanAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         Context context = viewGroup.getContext();
-        View itemView = LayoutInflater.from(context).inflate(R.layout.activity_scan_textview_holder, viewGroup, false);
+        View itemView = LayoutInflater.from(context).inflate(R.layout.viewholder_scan, viewGroup, false);
 
         return new ViewHolder(itemView);
     }

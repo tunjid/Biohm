@@ -144,7 +144,7 @@ public class ScanFragment extends BaseFragment
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Android M Permission check
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_ENABLE_BT);
             }
             else {
@@ -201,16 +201,10 @@ public class ScanFragment extends BaseFragment
 
     @Override
     public void onDeviceFound(final BluetoothDevice device) {
-        if (recyclerView != null)
-            recyclerView.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (!bleDevices.contains(device)) {
-                        bleDevices.add(device);
-                        recyclerView.getAdapter().notifyDataSetChanged();
-                    }
-                }
-            });
+        if (!bleDevices.contains(device)) {
+            bleDevices.add(device);
+            recyclerView.getAdapter().notifyDataSetChanged();
+        }
     }
 
     // Used to scan for BLE devices
@@ -229,7 +223,7 @@ public class ScanFragment extends BaseFragment
                 public void run() {
                     isScanning = false;
                     scanner.stopScan();
-                    getActivity().invalidateOptionsMenu();
+                    if (getActivity() != null) getActivity().invalidateOptionsMenu();
                 }
             }, SCAN_PERIOD);
         }

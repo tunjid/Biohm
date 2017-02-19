@@ -1,6 +1,5 @@
 package com.shemanigans.mime.fragments;
 
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SwitchCompat;
@@ -33,6 +33,8 @@ import com.shemanigans.mime.models.DeviceData;
 import com.shemanigans.mime.models.DeviceStatus;
 import com.shemanigans.mime.models.Series;
 import com.shemanigans.mime.services.BluetoothLeService;
+
+import static android.content.Context.BIND_AUTO_CREATE;
 
 public class Controlfragment extends BroadcastReceiverFragment
         implements
@@ -124,6 +126,14 @@ public class Controlfragment extends BroadcastReceiverFragment
         }*/
 
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        Intent bleIntent = new Intent(getActivity(), BluetoothLeService.class);
+        getActivity().bindService(bleIntent, this, BIND_AUTO_CREATE);
     }
 
     @Override

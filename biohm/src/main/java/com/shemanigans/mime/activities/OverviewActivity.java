@@ -73,8 +73,6 @@ public class OverviewActivity extends BaseActivity
         String deviceName = intent.getStringExtra(BluetoothLeService.DEVICE_NAME);
         String deviceAddress = intent.getStringExtra(BluetoothLeService.DEVICE_ADDRESS);
 
-        deviceName = deviceName.substring(0, deviceName.length() - 9);
-
         return OverviewParentFragment.newInstance(deviceName, deviceAddress);
     }
 
