@@ -9,7 +9,6 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +51,7 @@ public class Controlfragment extends BroadcastReceiverFragment
     public TextView mConnectionState, mDataField;
     public TextView sampleRateTextView, startFreqTextView, stepSizeTextView, numOfIncrementsTextView;
     public TextView summaryTableHeader;
-    public Switch enableNotifications;
+    public Switch notificationSwitch;
     public ProgressBar connectionStateBar;
     public TableLayout summaryTable;
     public Button exportToText, clearTextFile;
@@ -94,7 +93,7 @@ public class Controlfragment extends BroadcastReceiverFragment
         startFreqTextView = (TextView) rootView.findViewById(R.id.start_freq);
         stepSizeTextView = (TextView) rootView.findViewById(R.id.step_size);
         numOfIncrementsTextView = (TextView) rootView.findViewById(R.id.num_of_increments);
-        enableNotifications = (Switch) rootView.findViewById(R.id.enable_notifications);
+        notificationSwitch = (Switch) rootView.findViewById(R.id.enable_notifications);
         connectionStateBar = (ProgressBar) rootView.findViewById(R.id.connection_state_bar);
         mConnectionState = (TextView) rootView.findViewById(R.id.connection_state);
         mDataField = (TextView) rootView.findViewById(R.id.data_value);
@@ -103,7 +102,7 @@ public class Controlfragment extends BroadcastReceiverFragment
 
         exportToText.setOnClickListener(this);
         clearTextFile.setOnClickListener(this);
-        enableNotifications.setOnClickListener(this);
+        notificationSwitch.setOnClickListener(this);
 
         setSampleRateTextView(deviceStatus.sampleRate);
         setAcFreqTextViewParams(deviceStatus.startFreq, deviceStatus.stepSize, deviceStatus.numOfIncrements);
@@ -131,7 +130,7 @@ public class Controlfragment extends BroadcastReceiverFragment
 
         exportToText = clearTextFile = null;
 
-        enableNotifications = null;
+        notificationSwitch = null;
         connectionStateBar = null;
         summaryTable = null;
         bioimpedancePlot = null;
@@ -223,43 +222,29 @@ public class Controlfragment extends BroadcastReceiverFragment
 
 
     public void enableNotifications() {
-
-
-        // Turn off notifications.
-        if (!enableNotifications.isChecked()) {
-            //textFileButtons.setVisibility(View.VISIBLE);
-
-            /*Intent intent = new Intent(getActivity(), ServiceBinder.class);
-            getActivity().stopService(intent);*/
-
-            bluetoothLeService.stopForeground(true);
-            bluetoothLeService.setCharacteristicNotification(SampleGattAttributes.BIOIMPEDANCE_DATA, false);
-
-            //getBleService().setCharacteristicNotification(SampleGattAttributes.BIOIMPEDANCE_DATA, false);
-            //getBleService().stopForeground(true);
-        }
+        boolean isEnabled = notificationSwitch.isEnabled();
+        bioimpedancePlot.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
+        bluetoothLeService.setCharacteristicNotification(SampleGattAttributes.BIOIMPEDANCE_DATA, isEnabled);
 
         // Turn on notifications.
-        else {
-            startSampling();
+        /*if (notificationSwitch.isChecked()) {
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getActivity())
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setContentTitle(getString(R.string.sampling_data))
+                    .setContentText(getText(R.string.connected));
+            //.setContentIntent(activityPendingIntent);
+
+            bioimpedancePlot.setVisibility(View.VISIBLE);
+
+            bluetoothLeService.startForeground(BluetoothLeService.ONGOING_NOTIFICATION_ID, notificationBuilder.build());
+            bluetoothLeService.setCharacteristicNotification(SampleGattAttributes.BIOIMPEDANCE_DATA, true);
         }
+        // Turn off notifications.
+        else {
+            bluetoothLeService.stopForeground(true);
+            bluetoothLeService.setCharacteristicNotification(SampleGattAttributes.BIOIMPEDANCE_DATA, false);
+        }*/
     }
-
-    public void startSampling() {
-
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getActivity())
-                .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle(getString(R.string.sampling_data))
-                .setContentText(getText(R.string.connected));
-        //.setContentIntent(activityPendingIntent);
-
-        bioimpedancePlot.setVisibility(View.VISIBLE);
-        //textFileButtons.setVisibility(View.VISIBLE);
-
-        bluetoothLeService.startForeground(BluetoothLeService.ONGOING_NOTIFICATION_ID, notificationBuilder.build());
-        bluetoothLeService.setCharacteristicNotification(SampleGattAttributes.BIOIMPEDANCE_DATA, true);
-    }
-
 
     public void exportToText() {
 
@@ -314,7 +299,7 @@ public class Controlfragment extends BroadcastReceiverFragment
 
     public void onConnected() {
         updateConnectionState(R.string.connected);
-        enableNotifications.setClickable(true);
+        notificationSwitch.setClickable(true);
         connectionStateBar.setVisibility(View.GONE);
         summaryTable.setVisibility(View.VISIBLE);
         summaryTableHeader.setVisibility(View.VISIBLE);
@@ -324,8 +309,8 @@ public class Controlfragment extends BroadcastReceiverFragment
         setDeviceAddressTextView("");
         updateConnectionState(R.string.disconnected);
 
-        enableNotifications.setChecked(false);
-        enableNotifications.setClickable(false);
+        notificationSwitch.setChecked(false);
+        notificationSwitch.setClickable(false);
 
         summaryTable.setVisibility(View.GONE);
         summaryTableHeader.setVisibility(View.GONE);

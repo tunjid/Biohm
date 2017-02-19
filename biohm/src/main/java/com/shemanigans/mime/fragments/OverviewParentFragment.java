@@ -81,10 +81,11 @@ public class OverviewParentFragment extends BroadcastReceiverFragment
         TabLayout tabs = (TabLayout) rootView.findViewById(R.id.tabs);
 
         viewPager.setAdapter(analysisPagerAdapter);
+        viewPager.setCurrentItem(CONTROL);
         viewPager.addOnPageChangeListener(this);
+
         tabs.setupWithViewPager(viewPager);
 
-        viewPager.setCurrentItem(CONTROL);
         return rootView;
     }
 
@@ -92,8 +93,11 @@ public class OverviewParentFragment extends BroadcastReceiverFragment
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Intent bleIntent = new Intent(getActivity(), BluetoothLeService.class);
-        getActivity().bindService(bleIntent, this, BIND_AUTO_CREATE);
+        Intent intent = new Intent(getActivity(), BluetoothLeService.class);
+        intent.putExtra(BluetoothLeService.DEVICE_NAME, deviceName);
+        intent.putExtra(BluetoothLeService.DEVICE_ADDRESS, deviceAddress);
+
+        getActivity().bindService(intent, this, BIND_AUTO_CREATE);
 
         getToolBar().setTitle(deviceName);
     }

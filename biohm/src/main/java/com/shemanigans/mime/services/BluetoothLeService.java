@@ -59,7 +59,6 @@ public class BluetoothLeService extends Service
     public static final int ONGOING_NOTIFICATION_ID = 2;
     public static final int HISTORY_SIZE = 270;
 
-    private BluetoothManager bluetoothManager;
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothGatt bluetoothGatt;
 
@@ -81,6 +80,8 @@ public class BluetoothLeService extends Service
     public final static String DATA_AVAILABLE_UNKNOWN = "ACTION_DATA_AVAILABLE";
 
     public final static String EXTRA_DATA = "EXTRA_DATA";
+
+    private boolean isInitialized;
 
     private String deviceName;
     private String deviceAddress;
@@ -209,26 +210,81 @@ public class BluetoothLeService extends Service
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        if (intent != null) {
-            deviceName = intent.getStringExtra(DEVICE_NAME);
-            deviceAddress = intent.getStringExtra(DEVICE_ADDRESS);
-
-            if (!initialize()) {
-                Log.e(TAG, "Unable to initialize Bluetooth");
-            }
-            // Automatically connects to the device upon successful start-up initialization.
-
-            else {
-                deviceAddress = intent.getStringExtra(BluetoothLeService.DEVICE_ADDRESS);
-                connect(deviceAddress);
-            }
-        }
-
-        else {
-            stopSelf();
-        }
+        initialize(intent);
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        isBound = true;
+        initialize(intent);
+        return mBinder;
+    }
+
+    @Override
+    public void onRebind(Intent intent) {
+        // A client is binding to the service with bindService(),
+        // after onUnbind() has already been called
+        isBound = true;
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        // After using a given device, you should make sure that BluetoothGatt.close() is called
+        // such that resources are cleaned up properly.  In this particular example, close() is
+        // invoked when the UI is disconnected from the Service.
+
+        isBound = false;
+
+        boolean isConnected = isConnected();
+
+        final Intent resumeIntent = isConnected
+                ? new Intent(this, OverviewActivity.class)
+                : new Intent(this, MainActivity.class);
+
+        final PendingIntent activityPendingIntent = PendingIntent.getActivity(
+                this, 0, resumeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setContentTitle(getString(isConnected ? R.string.connected_to_device : R.string.disconnected))
+                .setContentText(getText(isConnected ? R.string.connected : R.string.disconnected_from_device))
+                .setContentIntent(activityPendingIntent);
+
+        if (isConnected) {
+            resumeIntent.putExtra(DEVICE_NAME, deviceName);
+            resumeIntent.putExtra(DEVICE_ADDRESS, deviceAddress);
+            startForeground(BluetoothLeService.ONGOING_NOTIFICATION_ID, notificationBuilder.build());
+        }
+        else {
+            stopForeground(false);
+            close();
+        }
+
+        return super.onUnbind(intent);
+    }
+
+    public void initialize(Intent intent) {
+        String deviceName = intent.getStringExtra(DEVICE_NAME);
+        String deviceAddress = intent.getStringExtra(DEVICE_ADDRESS);
+
+        if (isInitialized || deviceAddress == null) return;
+
+        this.deviceName = deviceName;
+        this.deviceAddress = deviceAddress;
+
+        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+
+        if (bluetoothManager == null) showToast(this, "Unable to initialize BluetoothManager.");
+        else bluetoothAdapter = bluetoothManager.getAdapter();
+
+        if (bluetoothAdapter == null) showToast(this, "Unable to obtain a BluetoothAdapter.");
+
+        if (bluetoothManager != null && bluetoothAdapter != null) connect(deviceAddress);
+
+        isInitialized = true;
+
+        Log.i(TAG, "Initialized BLE connection");
     }
 
     public String getDeviceAddress() {
@@ -286,33 +342,6 @@ public class BluetoothLeService extends Service
             }
         }
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-    }
-
-    /**
-     * Initializes a reference to the local BT adapter.
-     *
-     * @return Return true if the initialization is successful.
-     */
-    public boolean initialize() {
-        // For API level 18 and above, get a reference to BluetoothAdapter through
-        // BluetoothManager.
-        if (bluetoothManager == null) {
-            bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-            if (bluetoothManager == null) {
-                showToast(this, "Unable to initialize BluetoothManager.");
-                return false;
-            }
-            else {
-                bluetoothAdapter = bluetoothManager.getAdapter();
-            }
-        }
-
-        if (bluetoothAdapter == null) {
-            showToast(this, "Unable to obtain a BluetoothAdapter.");
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -459,8 +488,8 @@ public class BluetoothLeService extends Service
             return;
         }
 
-        bluetoothGatt.setCharacteristicNotification(characteristic, enabled); // can be true or false
 
+        bluetoothGatt.setCharacteristicNotification(characteristic, enabled);
 
         BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
                 UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
@@ -552,56 +581,6 @@ public class BluetoothLeService extends Service
                 }
             }
         }
-    }
-
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        isBound = true;
-        return mBinder;
-    }
-
-    @Override
-    public void onRebind(Intent intent) {
-        // A client is binding to the service with bindService(),
-        // after onUnbind() has already been called
-        isBound = true;
-    }
-
-    @Override
-    public boolean onUnbind(Intent intent) {
-        // After using a given device, you should make sure that BluetoothGatt.close() is called
-        // such that resources are cleaned up properly.  In this particular example, close() is
-        // invoked when the UI is disconnected from the Service.
-
-        isBound = false;
-
-        boolean isConnected = isConnected();
-
-        final Intent resumeIntent = isConnected
-                ? new Intent(this, OverviewActivity.class)
-                : new Intent(this, MainActivity.class);
-
-        final PendingIntent activityPendingIntent = PendingIntent.getActivity(
-                this, 0, resumeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle(getString(isConnected ? R.string.connected_to_device : R.string.disconnected))
-                .setContentText(getText(isConnected ? R.string.connected : R.string.disconnected_from_device))
-                .setContentIntent(activityPendingIntent);
-
-        if (isConnected) {
-            resumeIntent.putExtra(DEVICE_NAME, deviceName);
-            resumeIntent.putExtra(DEVICE_ADDRESS, deviceAddress);
-            startForeground(BluetoothLeService.ONGOING_NOTIFICATION_ID, notificationBuilder.build());
-        }
-        else {
-            stopForeground(false);
-            close();
-        }
-
-        return super.onUnbind(intent);
     }
 
     @Override
