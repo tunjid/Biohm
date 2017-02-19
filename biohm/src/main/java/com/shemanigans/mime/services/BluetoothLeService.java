@@ -25,8 +25,8 @@ import android.widget.Toast;
 
 import com.shemanigans.mime.R;
 import com.shemanigans.mime.SampleGattAttributes;
+import com.shemanigans.mime.activities.MainActivity;
 import com.shemanigans.mime.activities.OverviewActivity;
-import com.shemanigans.mime.fragments.ScanFragment;
 import com.shemanigans.mime.models.DeviceData;
 import com.shemanigans.mime.models.DeviceStatus;
 import com.shemanigans.mime.models.RXpair;
@@ -92,7 +92,7 @@ public class BluetoothLeService extends Service
     private BluetoothGattCharacteristic ACFrequencyCharacteristic;
 
     // Queue for reading multiple characteristics due to delay induced by callback.
-    private Queue<BluetoothGattCharacteristic> characteristicReadQueue = new LinkedList<>();
+    private Queue<BluetoothGattCharacteristic> readQueue = new LinkedList<>();
     private ArrayList<RXpair> curvePoints = new ArrayList<>();
 
     public static DeviceStatus deviceStatus = new DeviceStatus();
@@ -109,21 +109,21 @@ public class BluetoothLeService extends Service
                 case BluetoothProfile.STATE_CONNECTED:
                     connectionState = GATT_CONNECTED;
                     bluetoothGatt.discoverServices();
-                    Log.i(TAG, "STATE = CONNECTED");
                     break;
                 case BluetoothProfile.STATE_CONNECTING:
                     connectionState = GATT_CONNECTING;
-                    Log.i(TAG, "STATE = CONNECTING");
+                    broadcastUpdate(connectionState);
                     break;
                 case BluetoothProfile.STATE_DISCONNECTED:
                     connectionState = GATT_DISCONNECTED;
-                    Log.i(TAG, "STATE DISCONNECTED");
 
 
                     if (!isBound) { // Not bound anymore, update notification
                         stopForeground(true);
 
-                        final Intent scanIntent = new Intent(BluetoothLeService.this, ScanFragment.class);
+                        Intent scanIntent = new Intent(BluetoothLeService.this, MainActivity.class);
+                        scanIntent.putExtra(MainActivity.GO_TO_SCAN, true);
+                        scanIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                         final PendingIntent activityPendingIntent = PendingIntent.getActivity(
                                 BluetoothLeService.this, 0, scanIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -138,36 +138,35 @@ public class BluetoothLeService extends Service
 
                         notificationManager.notify(ONGOING_NOTIFICATION_ID, notificationBuilder.build());
                     }
+
+                    broadcastUpdate(connectionState);
                     break;
             }
 
-            broadcastUpdate(connectionState);
+            Log.i(TAG, "STATE = " + connectionState);
         }
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            boolean success = status == BluetoothGatt.GATT_SUCCESS;
 
-            if (status == BluetoothGatt.GATT_SUCCESS) {
+            if (success) {
                 broadcastUpdate(GATT_SERVICES_DISCOVERED);
                 findGattServices(getSupportedGattServices());
-                Log.i(TAG, "onServicesDiscovered true: " + status);
+                broadcastUpdate(connectionState);
             }
-            else {
-                Log.i(TAG, "onServicesDiscovered received: " + status);
-            }
+
+            Log.i(TAG, "onServicesDiscovered staus: " + success);
         }
 
         @Override
         // Checks queue for characteristics to be read and reads them
-        public void onCharacteristicRead(BluetoothGatt gatt,
-                                         BluetoothGattCharacteristic characteristic,
-                                         int status) {
+        public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
 
             if (status == BluetoothGatt.GATT_SUCCESS) {
 
-                if (characteristicReadQueue.size() > 0) {
-                    characteristicReadQueue.remove();
-                }
+                // Remove the characterictic that was just read
+                if (readQueue.size() > 0) readQueue.remove();
 
                 switch (characteristic.getUuid().toString()) {
                     case SampleGattAttributes.SAMPLE_RATE:
@@ -185,9 +184,8 @@ public class BluetoothLeService extends Service
                 showToast(BluetoothLeService.this, "onCharacteristicRead error: " + status);
             }
 
-            if (characteristicReadQueue.size() > 0) {
-                bluetoothGatt.readCharacteristic(characteristicReadQueue.element());
-            }
+            // Read the top of the queue
+            if (readQueue.size() > 0) bluetoothGatt.readCharacteristic(readQueue.element());
         }
 
         @Override
@@ -222,8 +220,6 @@ public class BluetoothLeService extends Service
 
     @Override
     public void onRebind(Intent intent) {
-        // A client is binding to the service with bindService(),
-        // after onUnbind() has already been called
         isBound = true;
     }
 
@@ -433,11 +429,11 @@ public class BluetoothLeService extends Service
         }
 
         //put the characteristic into the read queue
-        characteristicReadQueue.add(characteristic);
+        readQueue.add(characteristic);
 
         //if there is only 1 item in the queue, then read it.  If more than 1, we handle asynchronously in the callback above
         //GIVE PRECEDENCE to descriptor writes.  They must all finish first.
-        if (characteristicReadQueue.size() > 0) {
+        if (readQueue.size() > 0) {
             bluetoothGatt.readCharacteristic(characteristic);
         }
     }
