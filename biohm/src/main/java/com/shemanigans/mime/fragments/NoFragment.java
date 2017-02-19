@@ -1,4 +1,4 @@
-package com.shemanigans.mime;
+package com.shemanigans.mime.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.shemanigans.mime.R;
 import com.shemanigans.mime.abstractclasses.BaseFragment;
 
 public class NoFragment extends BaseFragment {

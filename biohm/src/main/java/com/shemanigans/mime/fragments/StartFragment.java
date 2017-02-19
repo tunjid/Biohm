@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.shemanigans.mime.NoFragment;
 import com.shemanigans.mime.R;
 import com.shemanigans.mime.abstractclasses.BaseFragment;
 

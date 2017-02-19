@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -23,6 +22,8 @@ import com.shemanigans.mime.models.Series;
 import com.shemanigans.mime.models.TaubinSolution;
 import com.shemanigans.mime.services.BluetoothLeService;
 
+import java.util.Locale;
+
 public class AnalysisFragment extends BroadcastReceiverFragment {
 
     public static final String ARG_SECTION_NUMBER = "section_number";
@@ -33,7 +34,6 @@ public class AnalysisFragment extends BroadcastReceiverFragment {
     // Declare UI references
     private TextView reTextView, riTextView, cTextView, RMSETextView, rsqTextView, alphaTextView, fPeakTextView;
     private TextView fragmentTitle;
-    public RelativeLayout textFileButtons;
     private XYPlot fluidStatusPlot = null;
     private TableRow heartRateHeader, heartRateValues, fluidStatusHeader, fluidStatusValues, statsHeader, statsValues;
 
@@ -59,7 +59,26 @@ public class AnalysisFragment extends BroadcastReceiverFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_analysis, container, false);
-        InitializeViewComponents(rootView);
+
+        fluidStatusPlot = (XYPlot) rootView.findViewById(R.id.fluidStatusPlot);
+        fragmentTitle = (TextView) rootView.findViewById(R.id.fragment_title);
+
+        reTextView = (TextView) rootView.findViewById(R.id.re);
+        riTextView = (TextView) rootView.findViewById(R.id.ri);
+        cTextView = (TextView) rootView.findViewById(R.id.c);
+
+        alphaTextView = (TextView) rootView.findViewById(R.id.alpha);
+        fPeakTextView = (TextView) rootView.findViewById(R.id.f_peak);
+        RMSETextView = (TextView) rootView.findViewById(R.id.rmse);
+        rsqTextView = (TextView) rootView.findViewById(R.id.rsq);
+
+        heartRateHeader = (TableRow) rootView.findViewById(R.id.heart_rate_headers);
+        heartRateValues = (TableRow) rootView.findViewById(R.id.heart_rate_values);
+        fluidStatusHeader = (TableRow) rootView.findViewById(R.id.fluid_status_headers);
+        fluidStatusValues = (TableRow) rootView.findViewById(R.id.fluid_status_values);
+
+        statsHeader = (TableRow) rootView.findViewById(R.id.stats_headers);
+        statsValues = (TableRow) rootView.findViewById(R.id.stats_values);
 
         // 	Create a couple arrays of y-values to plot:
         setupPlot();
@@ -94,39 +113,19 @@ public class AnalysisFragment extends BroadcastReceiverFragment {
     }
 
     public void setFluidStatusParams(TaubinSolution taubinSolution) {
-        reTextView.setText(String.format("%.1f", taubinSolution.re));
-        riTextView.setText(String.format("%.1f", taubinSolution.ri));
-        cTextView.setText(String.format("%.2e", taubinSolution.c));
-        RMSETextView.setText(String.format("%.1f", taubinSolution.RMSE));
-        rsqTextView.setText(String.format("%.2f", taubinSolution.RSQ));
-        alphaTextView.setText(String.format("%.3f", taubinSolution.alpha));
-        fPeakTextView.setText(String.format("%.2f", taubinSolution.fPeak));
-    }
-
-    private void InitializeViewComponents(View rootView) {
-        fluidStatusPlot = (XYPlot) rootView.findViewById(R.id.fluidStatusPlot);
-        textFileButtons = (RelativeLayout) rootView.findViewById(R.id.buttons);
-        fragmentTitle = (TextView) rootView.findViewById(R.id.fragment_title);
-        reTextView = (TextView) rootView.findViewById(R.id.re);
-        riTextView = (TextView) rootView.findViewById(R.id.ri);
-        cTextView = (TextView) rootView.findViewById(R.id.c);
-        alphaTextView = (TextView) rootView.findViewById(R.id.alpha);
-        fPeakTextView = (TextView) rootView.findViewById(R.id.f_peak);
-        RMSETextView = (TextView) rootView.findViewById(R.id.rmse);
-        rsqTextView = (TextView) rootView.findViewById(R.id.rsq);
-        heartRateHeader = (TableRow) rootView.findViewById(R.id.heart_rate_headers);
-        heartRateValues = (TableRow) rootView.findViewById(R.id.heart_rate_values);
-        fluidStatusHeader = (TableRow) rootView.findViewById(R.id.fluid_status_headers);
-        fluidStatusValues = (TableRow) rootView.findViewById(R.id.fluid_status_values);
-        statsHeader = (TableRow) rootView.findViewById(R.id.stats_headers);
-        statsValues = (TableRow) rootView.findViewById(R.id.stats_values);
+        reTextView.setText(String.format(Locale.US, "%.1f", taubinSolution.re));
+        riTextView.setText(String.format(Locale.US, "%.1f", taubinSolution.ri));
+        cTextView.setText(String.format(Locale.US, "%.2e", taubinSolution.c));
+        RMSETextView.setText(String.format(Locale.US, "%.1f", taubinSolution.RMSE));
+        rsqTextView.setText(String.format(Locale.US, "%.2f", taubinSolution.RSQ));
+        alphaTextView.setText(String.format(Locale.US, "%.3f", taubinSolution.alpha));
+        fPeakTextView.setText(String.format(Locale.US, "%.2f", taubinSolution.fPeak));
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         fluidStatusPlot = null;
-        textFileButtons = null;
         fragmentTitle = null;
         reTextView = null;
         riTextView = null;

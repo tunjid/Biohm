@@ -21,11 +21,6 @@ public class SampleRateDialogFragment extends BaseDialogFragment {
 
     private static final String SAMPLE_RATE = "SAMPLE_RATE";
 
-    private byte sampleRate = 0;
-
-    // Use this instance of the interface to deliver action events
-    SampleRateListener mListener;
-
     public static SampleRateDialogFragment newInstance(byte sampleRate) {
 
         SampleRateDialogFragment sampleRateDialogFragment = new SampleRateDialogFragment();
@@ -43,46 +38,44 @@ public class SampleRateDialogFragment extends BaseDialogFragment {
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        if (getParentFragment() != null) {
-            mListener = ((OverviewParentFragment) getParentFragment());
-        }
+        final SampleRateListener mListener = ((OverviewParentFragment) getParentFragment());
 
         final LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View view = inflater.inflate(R.layout.set_sample_rate, null);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
+        final View view = inflater.inflate(R.layout.set_sample_rate, null);
         final SeekBar seekBar = (SeekBar) view.findViewById(R.id.set_sample_rate);
         final TextView sampleRatetext = (TextView) view.findViewById(R.id.current_frequency);
 
 
-        builder.setTitle(R.string.set_sample_rate);
+        final byte sampleRate = getArguments().getByte(SAMPLE_RATE);
 
-        sampleRate = getArguments().getByte(SAMPLE_RATE);
-
-        seekBar.setProgress(((int)sampleRate / 5) - 1);
-        sampleRatetext.setText(Integer.toString(sampleRate));
+        seekBar.setProgress(((int) sampleRate / 5) - 1);
+        sampleRatetext.setText(String.valueOf(sampleRate));
 
         seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
-                sampleRate = (byte)((progressValue + 1) * 5);
-                sampleRatetext.setText("" + sampleRate); // Make values go from 5 to 90 in increments of 5
+                byte newValue = (byte) ((progressValue + 1) * 5);
+                sampleRatetext.setText(String.valueOf(newValue)); // Make values go from 5 to 90 in increments of 5
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
+                // Not used
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                // Not used
             }
         });
 
-        builder.setView(view)
+        return new AlertDialog.Builder(getActivity()).setTitle(R.string.set_sample_rate)
+                .setView(view)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        mListener.onDialogPositiveClickSampleRate((byte) sampleRate);
+                        mListener.onDialogPositiveClickSampleRate(sampleRate);
                         dismiss();
                     }
                 })
@@ -90,14 +83,8 @@ public class SampleRateDialogFragment extends BaseDialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         dismiss();
                     }
-                });
-        return builder.create();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mListener = null;
+                })
+                .create();
     }
 
     public interface SampleRateListener {

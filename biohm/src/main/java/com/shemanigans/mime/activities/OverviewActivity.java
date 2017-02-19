@@ -7,7 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.shemanigans.mime.NavigationDrawerFragment;
+import com.shemanigans.mime.fragments.NavigationDrawerFragment;
 import com.shemanigans.mime.R;
 import com.shemanigans.mime.abstractclasses.BaseActivity;
 import com.shemanigans.mime.fragments.OverviewParentFragment;

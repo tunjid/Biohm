@@ -58,9 +58,9 @@ public class FrequencySweepDialogFragment extends BaseDialogFragment {
         byte stepSize = getArguments().getByte(STEP_SIZE);
         byte numIncrements = getArguments().getByte(NUM_INCREMENTS);
 
-        startFreqEditText.setText("" + startFreq);
-        stepSizeEditText.setText("" + stepSize);
-        numOfIncrementsEditText.setText("" + numIncrements);
+        startFreqEditText.setText(String.format("%s", startFreq));
+        stepSizeEditText.setText(String.format("%s", stepSize));
+        numOfIncrementsEditText.setText(String.format("%s", numIncrements));
 
         builder.setView(view)
                 // Add action buttons
