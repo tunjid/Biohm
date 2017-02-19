@@ -146,6 +146,7 @@ public class Controlfragment extends BroadcastReceiverFragment
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         bluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+        if (bluetoothLeService.isConnected()) onConnected();
     }
 
     @Override
@@ -157,8 +158,10 @@ public class Controlfragment extends BroadcastReceiverFragment
         switch (intent.getAction()) {
             case BluetoothLeService.GATT_CONNECTED:
                 onConnected();
-                setDeviceAddressTextView(bluetoothLeService.getDeviceAddress());
                 getActivity().invalidateOptionsMenu();
+                if (bluetoothLeService != null)
+                    setDeviceAddressTextView(bluetoothLeService.getDeviceAddress());
+
                 break;
             case BluetoothLeService.GATT_CONNECTING:
                 gattConnecting();
@@ -320,11 +323,13 @@ public class Controlfragment extends BroadcastReceiverFragment
     public void onDisconnected() {
         setDeviceAddressTextView("");
         updateConnectionState(R.string.disconnected);
+
         enableNotifications.setChecked(false);
         enableNotifications.setClickable(false);
-        connectionStateBar.setVisibility(View.GONE);
+
         summaryTable.setVisibility(View.GONE);
         summaryTableHeader.setVisibility(View.GONE);
+        connectionStateBar.setVisibility(View.GONE);
     }
 
     public void gattConnecting() {

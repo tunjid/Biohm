@@ -3,7 +3,6 @@ package com.shemanigans.mime.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +19,6 @@ public class OverviewActivity extends BaseActivity
 
     private static final int LIVE_DATA = 0;
 
-    private CharSequence mTitle;
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
     @Override
@@ -28,13 +26,12 @@ public class OverviewActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_long_term);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-        mTitle = getTitle();
 
         // Set up the navigation drawer.
         mNavigationDrawerFragment.setUp(
@@ -55,15 +52,6 @@ public class OverviewActivity extends BaseActivity
                 showFragment(getNewOverViewFragment());
                 break;
         }
-
-    }
-
-    public void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-
-        assert actionBar != null;
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
     }
 
     private OverviewParentFragment getNewOverViewFragment() {
@@ -80,7 +68,6 @@ public class OverviewActivity extends BaseActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             getMenuInflater().inflate(R.menu.menu_activity_overview, menu);
-            restoreActionBar();
             return true;
         }
         return super.onCreateOptionsMenu(menu);

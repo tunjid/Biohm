@@ -3,8 +3,6 @@ package com.shemanigans.mime.abstractclasses;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 
-import com.shemanigans.mime.services.BluetoothLeService;
-
 /**
  * Base fragment
  */

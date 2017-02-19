@@ -337,9 +337,10 @@ public class BluetoothLeService extends Service
             showToast(this, "Trying to use an existing mBluetoothGatt for connection.");
 
             if (bluetoothGatt.connect()) {
-                showToast(this, "State changed to connecting...");
                 connectionState = GATT_CONNECTING;
-                //mGattCallback.onConnectionStateChange(bluetoothGatt, GATT_INDETERMINATE, BluetoothProfile.STATE_CONNECTING);
+
+                broadcastUpdate(connectionState);
+                showToast(this, "State changed to connecting...");
                 return true;
             }
             else {
@@ -358,6 +359,8 @@ public class BluetoothLeService extends Service
 
         deviceAddress = address;
         connectionState = GATT_CONNECTING;
+
+        broadcastUpdate(connectionState);
         showToast(this, "Trying to create a new connection...");
 
         return true;
@@ -486,8 +489,7 @@ public class BluetoothLeService extends Service
 
         bluetoothGatt.setCharacteristicNotification(characteristic, enabled);
 
-        BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
-                UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
+        BluetoothGattDescriptor descriptor = characteristic.getDescriptor(UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
 
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
         bluetoothGatt.writeDescriptor(descriptor);

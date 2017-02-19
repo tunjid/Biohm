@@ -1,6 +1,5 @@
 package com.shemanigans.mime.fragments;
 
-import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -8,7 +7,6 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,6 +31,10 @@ import com.shemanigans.mime.services.BluetoothLeService;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.M;
 
 public class ScanFragment extends BaseFragment
         implements
@@ -148,20 +150,12 @@ public class ScanFragment extends BaseFragment
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
-        //scanLeDevice(true);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Android M Permission check
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_ENABLE_BT);
-            }
-            else {
-                scanLeDevice(true);
-            }
-        }
-        else {
-            scanLeDevice(true);
-        }
+        boolean noPermit = SDK_INT >= M && ActivityCompat.checkSelfPermission(getActivity(),
+                ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED;
+
+        if (noPermit) requestPermissions(new String[]{ACCESS_COARSE_LOCATION}, REQUEST_ENABLE_BT);
+        else scanLeDevice(true);
     }
 
     @Override

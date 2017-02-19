@@ -10,7 +10,6 @@ import com.shemanigans.mime.fragments.StartFragment;
 
 
 public class MainActivity extends BaseActivity {
-    public final static String EXTRA_MESSAGE = "com.shemanigans.mime.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

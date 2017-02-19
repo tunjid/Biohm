@@ -45,6 +45,7 @@ public class OverviewParentFragment extends BroadcastReceiverFragment
     //private boolean freqSweepOn = false;
     private boolean connected;
 
+    private String deviceName;
     private String deviceAddress;
     private DeviceStatus deviceStatus = BluetoothLeService.deviceStatus;
     private BluetoothLeService bluetoothLeService;
@@ -68,6 +69,7 @@ public class OverviewParentFragment extends BroadcastReceiverFragment
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
+        deviceName = getArguments().getString(BluetoothLeService.DEVICE_NAME);
         deviceAddress = getArguments().getString(BluetoothLeService.DEVICE_ADDRESS);
     }
 
@@ -92,6 +94,8 @@ public class OverviewParentFragment extends BroadcastReceiverFragment
 
         Intent bleIntent = new Intent(getActivity(), BluetoothLeService.class);
         getActivity().bindService(bleIntent, this, BIND_AUTO_CREATE);
+
+        getToolBar().setTitle(deviceName);
     }
 
     @Override
@@ -105,18 +109,16 @@ public class OverviewParentFragment extends BroadcastReceiverFragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.set_sample_rate:
-                if (bluetoothLeService != null) {
+        if (bluetoothLeService != null) {
+            switch (item.getItemId()) {
+                case R.id.set_sample_rate:
                     bluetoothLeService.setCharacteristicIndication(SampleGattAttributes.SAMPLE_RATE, true);
 
                     SampleRateDialogFragment sampleRateDialog = SampleRateDialogFragment.newInstance(deviceStatus.sampleRate);
                     sampleRateDialog.show(getChildFragmentManager(), "SampleRateFragment");
-                }
-                return true;
-            case R.id.set_frequency_sweep:
-                if (bluetoothLeService != null) {
+
+                    return true;
+                case R.id.set_frequency_sweep:
                     bluetoothLeService.setCharacteristicIndication(SampleGattAttributes.AC_FREQ, true);
 
                     FrequencySweepDialogFragment frequencySweepDialog =
@@ -124,22 +126,21 @@ public class OverviewParentFragment extends BroadcastReceiverFragment
                                     deviceStatus.stepSize, deviceStatus.numOfIncrements);
 
                     frequencySweepDialog.show(getChildFragmentManager(), "FrequencySweepFragment");
-                }
-                return true;
-            case R.id.stop_background_service:
-                if (bluetoothLeService != null) {
-                    bluetoothLeService.stopSelf();
-                }
-                return true;
-            case R.id.menu_connect:
-                bluetoothLeService.connect(deviceAddress);
-                return true;
-            case R.id.menu_disconnect:
-                bluetoothLeService.stopForeground(true);
-                bluetoothLeService.disconnect();
-                return true;
-        }
 
+                    return true;
+                case R.id.stop_background_service:
+                    bluetoothLeService.stopSelf();
+
+                    return true;
+                case R.id.menu_connect:
+                    bluetoothLeService.connect(deviceAddress);
+                    return true;
+                case R.id.menu_disconnect:
+                    bluetoothLeService.stopForeground(true);
+                    bluetoothLeService.disconnect();
+                    return true;
+            }
+        }
         return super.onOptionsItemSelected(item);
     }
 
