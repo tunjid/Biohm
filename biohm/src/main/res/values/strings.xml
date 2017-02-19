@@ -60,10 +60,10 @@
 
     <!-- Imported strings from example -->
     <string name="ble_not_supported">BLE is not supported</string>
-    <string name="label_data">Data:</string>
-    <string name="label_device_address">Device address:</string>
-    <string name="label_device_name">Device name:</string>
-    <string name="label_state">State:</string>
+    <string name="label_data">Data: %1$s</string>
+    <string name="label_device_address">Device address: %1$s</string>
+    <string name="label_device_name">Device name: %1$s</string>
+    <string name="label_state">State: %1$s</string>
     <string name="no_data">No data</string>
     <string name="connected">Connected</string>
     <string name="connecting">Connecting&#8230;</string>

@@ -5,11 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:orientation="vertical"
-    android:padding="@dimen/activity_horizontal_margin">
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/device_address_tag"
+        android:id="@+id/device_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/label_device_address"
@@ -21,56 +20,15 @@
         tools:layout_constraintTop_creator="1" />
 
     <TextView
-        android:id="@+id/device_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textIsSelectable="true"
-        android:textSize="@dimen/small_text"
-        compat:layout_constraintLeft_toRightOf="@+id/device_address_tag"
-        compat:layout_constraintRight_toRightOf="parent"
-        compat:layout_constraintTop_toTopOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
-
-    <TextView
-        android:id="@+id/state_tag"
+        android:id="@+id/connection_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/label_state"
         android:textIsSelectable="true"
         android:textSize="@dimen/small_text"
         compat:layout_constraintLeft_toLeftOf="parent"
-        compat:layout_constraintTop_toBottomOf="@+id/device_address_tag"
+        compat:layout_constraintTop_toBottomOf="@+id/device_address"
         tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintTop_creator="1" />
-
-    <TextView
-        android:id="@+id/connection_state"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/disconnected"
-        android:textIsSelectable="true"
-        android:textSize="@dimen/small_text"
-        compat:layout_constraintLeft_toRightOf="@+id/state_tag"
-        compat:layout_constraintTop_toBottomOf="@+id/device_address_tag"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintTop_creator="1" />
-
-    <ProgressBar
-        android:id="@+id/connection_state_bar"
-        style="?android:attr/progressBarStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="25dp"
-        android:visibility="gone"
-        compat:layout_constraintBottom_toTopOf="parent"
-        compat:layout_constraintLeft_toLeftOf="parent"
-        compat:layout_constraintRight_toLeftOf="parent"
-        compat:layout_constraintTop_toTopOf="parent"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1" />
 
     <Switch
@@ -79,92 +37,31 @@
         android:layout_height="wrap_content"
         android:text="@string/enableNotifications"
         android:textSize="@dimen/small_text"
-        android:visibility="gone"
-        compat:layout_constraintRight_toRightOf="parent"
         compat:layout_constraintLeft_toLeftOf="parent"
+        compat:layout_constraintRight_toRightOf="parent"
         compat:layout_constraintTop_toBottomOf="@+id/connection_state"
-        tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1" />
 
-    <ScrollView
-        android:id="@+id/hscrollview"
+    <com.androidplot.xy.XYPlot
+        android:id="@+id/bioimpedancePlot"
+        title="Bioimpedance Data"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        compat:layout_constraintBottom_toTopOf="@+id/summary_table"
+        compat:layout_constraintBottom_toTopOf="@+id/data_value"
         compat:layout_constraintLeft_toLeftOf="parent"
         compat:layout_constraintRight_toRightOf="parent"
-        compat:layout_constraintTop_toBottomOf="@+id/enable_notifications"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_editor_absoluteY="0dp">
+        compat:layout_constraintTop_toBottomOf="@+id/enable_notifications" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.androidplot.xy.XYPlot
-                android:id="@+id/bioimpedancePlot"
-                title="Bioimpedance Data"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/data_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_data"
-                android:textIsSelectable="true"
-                android:textSize="@dimen/small_text" />
-
-            <TextView
-                android:id="@+id/data_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/no_data"
-                android:textIsSelectable="true"
-                android:textSize="@dimen/small_text" />
-        </LinearLayout>
-    </ScrollView>
-
-    <Button
-        android:id="@+id/begin"
-        android:layout_width="88dp"
+    <TextView
+        android:id="@+id/data_value"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
-        android:paddingLeft="80dp"
-        android:paddingRight="80dp"
-        android:text="@string/start"
-        android:textColor="@color/primary"
-        android:textSize="24sp"
-        android:textStyle="bold|italic"
-        android:visibility="visible"
-        compat:layout_constraintBottom_toBottomOf="@+id/hscrollview"
-        compat:layout_constraintLeft_toLeftOf="@+id/hscrollview"
-        compat:layout_constraintTop_toBottomOf="@+id/hscrollview"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintTop_creator="1" />
-
-    <View
-        android:id="@+id/begin_bar"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginBottom="51dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:background="?android:attr/dividerVertical"
-        android:visibility="visible"
-        compat:layout_constraintBottom_toTopOf="@+id/summary_table"
-        compat:layout_constraintLeft_toLeftOf="parent"
-        compat:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1" />
+        android:text="@string/label_data"
+        android:textIsSelectable="true"
+        android:textSize="@dimen/small_text"
+        compat:layout_constraintBottom_toTopOf="@+id/parameter_summary"
+        compat:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
         android:id="@+id/parameter_summary"
@@ -185,14 +82,12 @@
         android:id="@+id/summary_table"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
         android:stretchColumns="*"
         compat:layout_constraintBottom_toTopOf="@+id/export_to_text"
         compat:layout_constraintLeft_toLeftOf="parent"
         compat:layout_constraintRight_toRightOf="parent"
         tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1">
+        tools:layout_constraintRight_creator="1">
 
         <TableRow
             android:id="@+id/tableRow1"
@@ -204,7 +99,8 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:padding="3dip"
-                android:text="@string/sample_rate" />
+                android:text="@string/sample_rate"
+                android:textSize="@dimen/small_text" />
 
             <TextView
                 android:layout_height="wrap_content"
@@ -212,21 +108,24 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:padding="3dip"
-                android:text="@string/start_freq" />
+                android:text="@string/start_freq"
+                android:textSize="@dimen/small_text" />
 
             <TextView
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:padding="3dip"
-                android:text="@string/step_size" />
+                android:text="@string/step_size"
+                android:textSize="@dimen/small_text" />
 
             <TextView
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:padding="3dip"
-                android:text="@string/num_of_increments" />
+                android:text="@string/num_of_increments"
+                android:textSize="@dimen/small_text" />
         </TableRow>
 
         <TableRow
@@ -240,7 +139,8 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:padding="3dip"
-                android:text="@string/not_applicable" />
+                android:text="@string/not_applicable"
+                android:textSize="@dimen/small_text" />
 
             <TextView
                 android:id="@+id/start_freq"
@@ -248,7 +148,8 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:padding="3dip"
-                android:text="@string/not_applicable" />
+                android:text="@string/not_applicable"
+                android:textSize="@dimen/small_text" />
 
             <TextView
                 android:id="@+id/step_size"
@@ -256,7 +157,8 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:padding="3dip"
-                android:text="@string/not_applicable" />
+                android:text="@string/not_applicable"
+                android:textSize="@dimen/small_text" />
 
             <TextView
                 android:id="@+id/num_of_increments"
@@ -264,7 +166,8 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:padding="3dip"
-                android:text="@string/not_applicable" />
+                android:text="@string/not_applicable"
+                android:textSize="@dimen/small_text" />
         </TableRow>
     </TableLayout>
 
@@ -275,7 +178,7 @@
         android:background="?android:attr/selectableItemBackground"
         android:text="@string/exportToText"
         android:textColor="@color/primary"
-        android:textSize="24sp"
+        android:textSize="@dimen/medium_text"
         android:textStyle="bold|italic"
         compat:layout_constraintBottom_toBottomOf="parent"
         compat:layout_constraintHorizontal_chainStyle="spread_inside"
@@ -289,9 +192,23 @@
         android:background="?android:attr/selectableItemBackground"
         android:text="@string/clearTextFile"
         android:textColor="@color/primary"
-        android:textSize="24sp"
+        android:textSize="@dimen/medium_text"
         android:textStyle="bold|italic"
         compat:layout_constraintBottom_toBottomOf="parent"
         compat:layout_constraintLeft_toRightOf="@+id/export_to_text"
         compat:layout_constraintRight_toRightOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/connection_state_bar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        compat:layout_constraintBottom_toTopOf="parent"
+        compat:layout_constraintLeft_toLeftOf="parent"
+        compat:layout_constraintRight_toLeftOf="parent"
+        compat:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
 </android.support.constraint.ConstraintLayout>

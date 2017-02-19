@@ -10,13 +10,11 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -54,11 +52,10 @@ public class Controlfragment extends BroadcastReceiverFragment
     public TextView mConnectionState, mDataField;
     public TextView sampleRateTextView, startFreqTextView, stepSizeTextView, numOfIncrementsTextView;
     public TextView summaryTableHeader;
-    public View startButtonBar;
     public Switch enableNotifications;
     public ProgressBar connectionStateBar;
     public TableLayout summaryTable;
-    public Button exportToText, clearTextFile, startButton;
+    public Button exportToText, clearTextFile;
     public XYPlot bioimpedancePlot = null;
 
     private BluetoothLeService bluetoothLeService;
@@ -97,8 +94,6 @@ public class Controlfragment extends BroadcastReceiverFragment
         startFreqTextView = (TextView) rootView.findViewById(R.id.start_freq);
         stepSizeTextView = (TextView) rootView.findViewById(R.id.step_size);
         numOfIncrementsTextView = (TextView) rootView.findViewById(R.id.num_of_increments);
-        startButton = (Button) rootView.findViewById(R.id.begin);
-        startButtonBar = rootView.findViewById(R.id.begin_bar);
         enableNotifications = (Switch) rootView.findViewById(R.id.enable_notifications);
         connectionStateBar = (ProgressBar) rootView.findViewById(R.id.connection_state_bar);
         mConnectionState = (TextView) rootView.findViewById(R.id.connection_state);
@@ -108,20 +103,12 @@ public class Controlfragment extends BroadcastReceiverFragment
 
         exportToText.setOnClickListener(this);
         clearTextFile.setOnClickListener(this);
-        startButton.setOnClickListener(this);
         enableNotifications.setOnClickListener(this);
 
         setSampleRateTextView(deviceStatus.sampleRate);
         setAcFreqTextViewParams(deviceStatus.startFreq, deviceStatus.stepSize, deviceStatus.numOfIncrements);
 
         setupPlot();
-
-        /*if (longTerm) {
-            bioimpedancePlot.setVisibility(View.VISIBLE);
-            startButton.setVisibility(View.GONE);
-            startButtonBar.setVisibility(View.GONE);
-            mConnectionState.setVisibility(View.GONE);
-        }*/
 
         return rootView;
     }
@@ -142,9 +129,8 @@ public class Controlfragment extends BroadcastReceiverFragment
                 sampleRateTextView = startFreqTextView = stepSizeTextView =
                         numOfIncrementsTextView = summaryTableHeader = null;
 
-        exportToText = clearTextFile = startButton = null;
+        exportToText = clearTextFile = null;
 
-        startButtonBar = null;
         enableNotifications = null;
         connectionStateBar = null;
         summaryTable = null;
@@ -220,9 +206,6 @@ public class Controlfragment extends BroadcastReceiverFragment
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.begin:
-                startSamplingInit();
-                break;
             case R.id.enable_notifications:
                 enableNotifications();
                 break;
@@ -238,7 +221,6 @@ public class Controlfragment extends BroadcastReceiverFragment
 
     public void enableNotifications() {
 
-        enableNotifications.setVisibility(View.VISIBLE);
 
         // Turn off notifications.
         if (!enableNotifications.isChecked()) {
@@ -258,17 +240,6 @@ public class Controlfragment extends BroadcastReceiverFragment
         else {
             startSampling();
         }
-    }
-
-
-    public void startSamplingInit() {
-
-        enableNotifications.setVisibility(View.VISIBLE);
-        enableNotifications.setChecked(true);
-        startButton.setVisibility(View.GONE);
-        startButtonBar.setVisibility(View.GONE);
-
-        startSampling();
     }
 
     public void startSampling() {
@@ -295,16 +266,8 @@ public class Controlfragment extends BroadcastReceiverFragment
 
     }
 
-   /* public void startSampling() {
-        buttonCallback.startSamplingInit();
-    }*/
-
-   /* public void enableNotifications() {
-        buttonCallback.enableNotifications();
-    }*/
-
     public void updateImpedanceData(String data) {
-        mDataField.setText(data);
+        mDataField.setText(String.format(getString(R.string.label_data), data));
     }
 
     public void clearUI() {
@@ -312,7 +275,7 @@ public class Controlfragment extends BroadcastReceiverFragment
     }
 
     public void setDeviceAddressTextView(String mDeviceAddress) {
-        deviceAddress.setText(mDeviceAddress);
+        deviceAddress.setText(String.format(getString(R.string.label_device_address), mDeviceAddress));
     }
 
 
@@ -352,32 +315,25 @@ public class Controlfragment extends BroadcastReceiverFragment
         connectionStateBar.setVisibility(View.GONE);
         summaryTable.setVisibility(View.VISIBLE);
         summaryTableHeader.setVisibility(View.VISIBLE);
-        startButton.setVisibility(View.VISIBLE);
-        startButtonBar.setVisibility(View.VISIBLE);
     }
 
     public void onDisconnected() {
+        setDeviceAddressTextView("");
         updateConnectionState(R.string.disconnected);
         enableNotifications.setChecked(false);
         enableNotifications.setClickable(false);
-        startButton.setVisibility(View.GONE);
-        startButtonBar.setVisibility(View.GONE);
+        connectionStateBar.setVisibility(View.GONE);
         summaryTable.setVisibility(View.GONE);
         summaryTableHeader.setVisibility(View.GONE);
-        startButton.setTextColor(Color.WHITE);
-        startButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary));
     }
 
     public void gattConnecting() {
-        connectionStateBar.getIndeterminateDrawable().setColorFilter(
-                ContextCompat.getColor(getContext(), R.color.primary),
-                android.graphics.PorterDuff.Mode.SRC_IN);
         connectionStateBar.setVisibility(View.VISIBLE);
         updateConnectionState(R.string.connecting);
     }
 
     public void updateConnectionState(final int resourceId) {
-        mConnectionState.setText(resourceId);
+        mConnectionState.setText(String.format(getString(R.string.label_state), getString(resourceId)));
     }
 
     public void updatePlotSeries(boolean freqSweepOn) {
