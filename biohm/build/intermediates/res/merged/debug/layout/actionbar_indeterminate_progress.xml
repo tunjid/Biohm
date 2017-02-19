@@ -9,4 +9,4 @@
         android:layout_height="32dp"
         android:layout_gravity="center" />
 
-</FrameLayout><!-- From: file:/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/res/layout/actionbar_indeterminate_progress.xml -->
+</FrameLayout>

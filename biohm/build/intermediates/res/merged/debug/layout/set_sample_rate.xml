@@ -38,4 +38,4 @@
         android:layout_marginTop="4dp"
         android:max="17" />
 
-</LinearLayout><!-- From: file:/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/res/layout/set_sample_rate.xml -->
+</LinearLayout>

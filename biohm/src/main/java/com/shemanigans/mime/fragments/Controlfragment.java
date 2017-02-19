@@ -1,8 +1,14 @@
 package com.shemanigans.mime.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SwitchCompat;
@@ -15,19 +21,23 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.androidplot.ui.widget.TextLabelWidget;
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.XYGraphWidget;
 import com.androidplot.xy.XYPlot;
 import com.shemanigans.mime.R;
 import com.shemanigans.mime.SampleGattAttributes;
-import com.shemanigans.mime.abstractclasses.BaseFragment;
+import com.shemanigans.mime.abstractclasses.BroadcastReceiverFragment;
 import com.shemanigans.mime.models.DeviceData;
 import com.shemanigans.mime.models.DeviceStatus;
 import com.shemanigans.mime.models.Series;
 import com.shemanigans.mime.services.BluetoothLeService;
 
-public class Controlfragment extends BaseFragment
-        implements View.OnClickListener { // This fragment presents information for the class LongTerm
+public class Controlfragment extends BroadcastReceiverFragment
+        implements
+        ServiceConnection,
+        View.OnClickListener { // This fragment presents information for the class LongTerm
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -50,6 +60,8 @@ public class Controlfragment extends BaseFragment
     public Button exportToText, clearTextFile, startButton;
     public XYPlot bioimpedancePlot = null;
 
+    private BluetoothLeService bluetoothLeService;
+
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -66,11 +78,39 @@ public class Controlfragment extends BaseFragment
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_dca, container, false);
 
-        InitializeViewComponents(rootView);
+        deviceAddress = (TextView) rootView.findViewById(R.id.device_address);
+        exportToText = (Button) rootView.findViewById(R.id.export_to_text);
+        clearTextFile = (Button) rootView.findViewById(R.id.clear_text_file);
+        bioimpedancePlot = (XYPlot) rootView.findViewById(R.id.bioimpedancePlot);
+        sampleRateTextView = (TextView) rootView.findViewById(R.id.sample_rate);
+        startFreqTextView = (TextView) rootView.findViewById(R.id.start_freq);
+        stepSizeTextView = (TextView) rootView.findViewById(R.id.step_size);
+        numOfIncrementsTextView = (TextView) rootView.findViewById(R.id.num_of_increments);
+        startButton = (Button) rootView.findViewById(R.id.begin);
+        startButtonBar = rootView.findViewById(R.id.begin_bar);
+        enableNotifications = (SwitchCompat) rootView.findViewById(R.id.enable_notifications);
+        connectionStateBar = (ProgressBar) rootView.findViewById(R.id.connection_state_bar);
+        textFileButtons = (RelativeLayout) rootView.findViewById(R.id.buttons);
+        mConnectionState = (TextView) rootView.findViewById(R.id.connection_state);
+        mDataField = (TextView) rootView.findViewById(R.id.data_value);
+        summaryTableHeader = (TextView) rootView.findViewById(R.id.parameter_summary);
+        summaryTable = (TableLayout) rootView.findViewById(R.id.summary_table);
+
+        exportToText.setOnClickListener(this);
+        clearTextFile.setOnClickListener(this);
+        startButton.setOnClickListener(this);
+        enableNotifications.setOnClickListener(this);
+
         setSampleRateTextView(deviceStatus.sampleRate);
         setAcFreqTextViewParams(deviceStatus.startFreq, deviceStatus.stepSize, deviceStatus.numOfIncrements);
 
@@ -104,29 +144,70 @@ public class Controlfragment extends BaseFragment
         bioimpedancePlot = null;
     }
 
-    private void InitializeViewComponents(View rootView) {
-        deviceAddress = (TextView) rootView.findViewById(R.id.device_address);
-        exportToText = (Button) rootView.findViewById(R.id.export_to_text);
-        clearTextFile = (Button) rootView.findViewById(R.id.clear_text_file);
-        bioimpedancePlot = (XYPlot) rootView.findViewById(R.id.bioimpedancePlot);
-        sampleRateTextView = (TextView) rootView.findViewById(R.id.sample_rate);
-        startFreqTextView = (TextView) rootView.findViewById(R.id.start_freq);
-        stepSizeTextView = (TextView) rootView.findViewById(R.id.step_size);
-        numOfIncrementsTextView = (TextView) rootView.findViewById(R.id.num_of_increments);
-        startButton = (Button) rootView.findViewById(R.id.begin);
-        startButtonBar = rootView.findViewById(R.id.begin_bar);
-        enableNotifications = (SwitchCompat) rootView.findViewById(R.id.enable_notifications);
-        connectionStateBar = (ProgressBar) rootView.findViewById(R.id.connection_state_bar);
-        textFileButtons = (RelativeLayout) rootView.findViewById(R.id.buttons);
-        mConnectionState = (TextView) rootView.findViewById(R.id.connection_state);
-        mDataField = (TextView) rootView.findViewById(R.id.data_value);
-        summaryTableHeader = (TextView) rootView.findViewById(R.id.parameter_summary);
-        summaryTable = (TableLayout) rootView.findViewById(R.id.summary_table);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unbindService(this);
+    }
 
-        exportToText.setOnClickListener(this);
-        clearTextFile.setOnClickListener(this);
-        startButton.setOnClickListener(this);
-        enableNotifications.setOnClickListener(this);
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        bluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        bluetoothLeService = null;
+    }
+
+    public void onReceive(Context context, Intent intent) {
+        switch (intent.getAction()) {
+            case BluetoothLeService.GATT_CONNECTED:
+                onConnected();
+                setDeviceAddressTextView(bluetoothLeService.getDeviceAddress());
+                getActivity().invalidateOptionsMenu();
+                break;
+            case BluetoothLeService.GATT_CONNECTING:
+                gattConnecting();
+                getActivity().invalidateOptionsMenu();
+                break;
+            case BluetoothLeService.GATT_DISCONNECTED:
+                onDisconnected();
+                clearUI();
+                break;
+            case BluetoothLeService.DATA_AVAILABLE_UNKNOWN:
+                String data = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
+                mDataField.setText(data);
+                break;
+            case BluetoothLeService.DATA_AVAILABLE_SAMPLE_RATE:
+                setSampleRateTextView(deviceStatus.sampleRate);
+                break;
+            case BluetoothLeService.DATA_AVAILABLE_FREQUENCY_PARAMS:
+
+                startFreqTextView.setText(getString(R.string.kilohertz, deviceStatus.startFreq));
+
+                if (!deviceStatus.freqSweepOn) {
+                    stepSizeTextView.setText(R.string.not_applicable);
+                    numOfIncrementsTextView.setText(R.string.not_applicable);
+
+                    updatePlotSeries(false);
+                }
+                else {
+                    stepSizeTextView.setText(getString(R.string.kilohertz, deviceStatus.stepSize));
+                    numOfIncrementsTextView.setText(getString(R.string.number, deviceStatus.numOfIncrements));
+
+                    updatePlotSeries(true);
+                }
+                break;
+            case BluetoothLeService.DATA_AVAILABLE_BIOIMPEDANCE:
+                DeviceData deviceData = intent.getParcelableExtra(BluetoothLeService.DATA_AVAILABLE_BIOIMPEDANCE);
+                String impedanceData = deviceData.getAsCSV();
+
+                // update instantaneous data:
+                updateImpedanceData(impedanceData);
+                updatePlot(deviceData);
+                break;
+        }
     }
 
     @Override
@@ -158,8 +239,12 @@ public class Controlfragment extends BaseFragment
 
             /*Intent intent = new Intent(getActivity(), ServiceBinder.class);
             getActivity().stopService(intent);*/
-            getBleService().setCharacteristicNotification(SampleGattAttributes.BIOIMPEDANCE_DATA, false);
-            getBleService().stopForeground(true);
+
+            bluetoothLeService.stopForeground(true);
+            bluetoothLeService.setCharacteristicNotification(SampleGattAttributes.BIOIMPEDANCE_DATA, false);
+
+            //getBleService().setCharacteristicNotification(SampleGattAttributes.BIOIMPEDANCE_DATA, false);
+            //getBleService().stopForeground(true);
         }
 
         // Turn on notifications.
@@ -190,8 +275,8 @@ public class Controlfragment extends BaseFragment
         bioimpedancePlot.setVisibility(View.VISIBLE);
         textFileButtons.setVisibility(View.VISIBLE);
 
-        getBleService().startForeground(BluetoothLeService.ONGOING_NOTIFICATION_ID, notificationBuilder.build());
-        getBleService().setCharacteristicNotification(SampleGattAttributes.BIOIMPEDANCE_DATA, true);
+        bluetoothLeService.startForeground(BluetoothLeService.ONGOING_NOTIFICATION_ID, notificationBuilder.build());
+        bluetoothLeService.setCharacteristicNotification(SampleGattAttributes.BIOIMPEDANCE_DATA, true);
     }
 
 
@@ -304,6 +389,8 @@ public class Controlfragment extends BaseFragment
         bgPaint.setColor(Color.parseColor("#fffafafa"));
         bgPaint.setStyle(Paint.Style.FILL);
 
+        XYGraphWidget graphWidget = bioimpedancePlot.getGraph();
+
         bioimpedancePlot.setRangeBoundaries(0, 1000, BoundaryMode.AUTO);
         bioimpedancePlot.setDomainBoundaries(0, 270, BoundaryMode.FIXED);
 
@@ -311,46 +398,50 @@ public class Controlfragment extends BaseFragment
         bioimpedancePlot.setBackgroundColor(Color.WHITE);
         bioimpedancePlot.getBackgroundPaint().set(bgPaint);
         //	bioimpedancePlot.getBackgroundPaint().setColor(Color.parseColor("#d8d8d8"));
-        bioimpedancePlot.getGraphWidget().getBackgroundPaint().setColor(Color.TRANSPARENT);
-        bioimpedancePlot.getGraphWidget().setGridBackgroundPaint(null);
+        graphWidget.getBackgroundPaint().setColor(Color.TRANSPARENT);
+        graphWidget.setGridBackgroundPaint(null);
         bioimpedancePlot.setBorderStyle(XYPlot.BorderStyle.SQUARE, null, null);
-        bioimpedancePlot.getGraphWidget().setPadding(15, 15, 15, 15);
+        graphWidget.setPadding(15, 15, 15, 15);
         bioimpedancePlot.setPlotMargins(0, 0, 0, 0);
-        bioimpedancePlot.getTitleWidget().setText("");
+        bioimpedancePlot.getTitle().setText("");
 
         bioimpedancePlot.setBorderPaint(bgPaint);
-        //bioimpedancePlot.getGraphWidget().getBorderPaint().setColor(Color.TRANSPARENT);
+        //graphWidget.getBorderPaint().setColor(Color.TRANSPARENT);
 
         // Format domain
-        bioimpedancePlot.getDomainLabelWidget().getLabelPaint().setColor(Color.parseColor("#006bb2"));
-        bioimpedancePlot.getDomainLabelWidget().getLabelPaint().setTextSize(20);
-        bioimpedancePlot.getGraphWidget().getDomainTickLabelPaint().setColor(Color.BLACK);
-        bioimpedancePlot.getGraphWidget().getDomainTickLabelPaint().setTextSize(20);
-        bioimpedancePlot.getGraphWidget().getDomainOriginTickLabelPaint().setColor(Color.BLACK);
-        bioimpedancePlot.getGraphWidget().getDomainGridLinePaint().setColor(Color.TRANSPARENT);
+
+//        graphWidget.getDomainTickLabelPaint().setColor(Color.BLACK);
+//        graphWidget.getDomainTickLabelPaint().setTextSize(20);
+//        graphWidget.getDomainOriginTickLabelPaint().setColor(Color.BLACK);
+        graphWidget.getDomainGridLinePaint().setColor(Color.TRANSPARENT);
         bioimpedancePlot.setDomainStepValue(5);
         bioimpedancePlot.setDomainLabel("Sample Index");
-        bioimpedancePlot.getDomainLabelWidget().pack();
+
+        TextLabelWidget domainTitle = bioimpedancePlot.getDomainTitle();
+
+        domainTitle.getLabelPaint().setColor(Color.parseColor("#006bb2"));
+        domainTitle.getLabelPaint().setTextSize(20);
+        domainTitle.pack();
 
 
         // Format range
-        bioimpedancePlot.getRangeLabelWidget().getLabelPaint().setColor(Color.parseColor("#006bb2"));
-        bioimpedancePlot.getRangeLabelWidget().getLabelPaint().setTextSize(20);
-        bioimpedancePlot.getGraphWidget().getRangeTickLabelPaint().setColor(Color.BLACK);
-        bioimpedancePlot.getGraphWidget().getRangeTickLabelPaint().setTextSize(20);
-        bioimpedancePlot.getGraphWidget().getRangeOriginTickLabelPaint().setColor(Color.BLACK);
-        bioimpedancePlot.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
-        bioimpedancePlot.getGraphWidget().getRangeGridLinePaint().setColor(Color.TRANSPARENT);
-        bioimpedancePlot.getGraphWidget().getRangeSubGridLinePaint().setColor(Color.TRANSPARENT);
+        bioimpedancePlot.getRangeTitle().getLabelPaint().setColor(Color.parseColor("#006bb2"));
+        bioimpedancePlot.getRangeTitle().getLabelPaint().setTextSize(20);
+//        graphWidget.getRangeTickLabelPaint().setColor(Color.BLACK);
+//        graphWidget.getRangeTickLabelPaint().setTextSize(20);
+//        graphWidget.getRangeOriginTickLabelPaint().setColor(Color.BLACK);
+        graphWidget.getRangeOriginLinePaint().setColor(Color.BLACK);
+        graphWidget.getRangeGridLinePaint().setColor(Color.TRANSPARENT);
+        graphWidget.getRangeSubGridLinePaint().setColor(Color.TRANSPARENT);
         bioimpedancePlot.setRangeLabel("Data");
-        bioimpedancePlot.setTicksPerRangeLabel(3);
-        bioimpedancePlot.getRangeLabelWidget().pack();
+//        bioimpedancePlot.setTicksPerRangeLabel(3);
+        bioimpedancePlot.getRangeTitle().pack();
 
         // Format legend
 
-        bioimpedancePlot.getLegendWidget().getTextPaint().setColor(Color.parseColor("#006bb2"));
-        bioimpedancePlot.getLegendWidget().getTextPaint().setTextSize(20);
-        bioimpedancePlot.getLegendWidget().setPaddingBottom(10);
+        bioimpedancePlot.getLegend().getTextPaint().setColor(Color.parseColor("#006bb2"));
+        bioimpedancePlot.getLegend().getTextPaint().setTextSize(20);
+        bioimpedancePlot.getLegend().setPaddingBottom(10);
 
         // Add series
 

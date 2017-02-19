@@ -19,4 +19,4 @@
           android:layout_height="wrap_content"
           android:textSize="80sp" />
  
-</LinearLayout><!-- From: file:/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/res/layout/pager_item.xml -->
+</LinearLayout>

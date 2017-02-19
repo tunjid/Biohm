@@ -23,4 +23,3 @@
           android:drawable="@drawable/mimetheme_spinner_focused_holo_light" />
     <item android:drawable="@drawable/mimetheme_spinner_default_holo_light" />
 </selector>
-<!-- From: file:/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/res/drawable/mimetheme_spinner_background_holo_light.xml -->

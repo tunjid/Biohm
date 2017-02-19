@@ -46,4 +46,4 @@
         android:title="@string/stop_background"
         compat:showAsAction="never"/>
 
-</menu><!-- From: file:/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/res/menu/menu_fragment_overview.xml -->
+</menu>

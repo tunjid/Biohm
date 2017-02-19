@@ -18,4 +18,3 @@
     <item android:state_focused="true"  android:drawable="@drawable/mimetheme_switch_bg_focused_holo_light" />
     <item                               android:drawable="@drawable/mimetheme_switch_bg_holo_light" />
 </selector>
-<!-- From: file:/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/res/drawable/mimetheme_switch_track_holo_light.xml -->

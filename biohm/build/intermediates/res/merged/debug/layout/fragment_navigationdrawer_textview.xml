@@ -15,4 +15,4 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/white" />
 
-</LinearLayout><!-- From: file:/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/res/layout/fragment_navigationdrawer_textview.xml -->
+</LinearLayout>

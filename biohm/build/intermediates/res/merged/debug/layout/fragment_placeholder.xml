@@ -30,4 +30,4 @@
         android:contentDescription="@string/desc"
         android:src="@drawable/mime_app_logo" />
 
-</LinearLayout><!-- From: file:/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/res/layout/fragment_placeholder.xml -->
+</LinearLayout>

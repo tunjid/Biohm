@@ -23,4 +23,4 @@
         android:layout_height="wrap_content"
         android:text="@string/button_send"
         android:textSize="20sp" />
-</LinearLayout><!-- From: file:/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/res/layout/activity_scan_textview_holder.xml -->
+</LinearLayout>

@@ -17,13 +17,15 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.shemanigans.mime.R;
 import com.shemanigans.mime.SampleGattAttributes;
+import com.shemanigans.mime.activities.MainActivity;
 import com.shemanigans.mime.activities.OverviewActivity;
-import com.shemanigans.mime.activities.ScanActivity;
+import com.shemanigans.mime.fragments.ScanFragment;
 import com.shemanigans.mime.models.DeviceData;
 import com.shemanigans.mime.models.DeviceStatus;
 import com.shemanigans.mime.models.RXpair;
@@ -78,8 +80,8 @@ public class BluetoothLeService extends Service
 
     public final static String EXTRA_DATA = "EXTRA_DATA";
 
-    public static String deviceName;
-    public static String deviceAddress;
+    private String deviceName;
+    private String deviceAddress;
 
     private String connectionState = GATT_DISCONNECTED;
 
@@ -139,7 +141,7 @@ public class BluetoothLeService extends Service
                     if (!isBound) { // Not bound anymore, update notification
                         stopForeground(true);
 
-                        final Intent scanIntent = new Intent(BluetoothLeService.this, ScanActivity.class);
+                        final Intent scanIntent = new Intent(BluetoothLeService.this, ScanFragment.class);
 
                         final PendingIntent activityPendingIntent = PendingIntent.getActivity(
                                 BluetoothLeService.this, 0, scanIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -223,12 +225,16 @@ public class BluetoothLeService extends Service
         }
     };
 
+    public String getDeviceAddress() {
+        return deviceAddress;
+    }
+
     /**
      * Used to send broadcasts that don't have attached data
      */
     private void broadcastUpdate(final String action) {
         final Intent intent = new Intent(action);
-        sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     /**
@@ -273,7 +279,7 @@ public class BluetoothLeService extends Service
                     break;
             }
         }
-        sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     /**
@@ -429,7 +435,7 @@ public class BluetoothLeService extends Service
     /**
      * Enables or disables notification on a given characteristic.
      *
-     * @param uuid    UUID of the Characteristic to act on.
+     * @param uuid UUID of the Characteristic to act on.
      * @param enabled If true, enable notification.  False otherwise.
      */
     public void setCharacteristicNotification(String uuid, boolean enabled) {
@@ -568,7 +574,7 @@ public class BluetoothLeService extends Service
 
         final Intent resumeIntent = isConnected
                 ? new Intent(this, OverviewActivity.class)
-                : new Intent(this, ScanActivity.class);
+                : new Intent(this, MainActivity.class);
 
         final PendingIntent activityPendingIntent = PendingIntent.getActivity(
                 this, 0, resumeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -612,7 +618,7 @@ public class BluetoothLeService extends Service
         final Intent intent = new Intent(DATA_AVAILABLE_TAUBIN_SOLUTION);
         intent.putExtra(DATA_AVAILABLE_TAUBIN_SOLUTION, taubinSolution);
 
-        sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     private void updateTaubinData(DeviceData deviceData) {

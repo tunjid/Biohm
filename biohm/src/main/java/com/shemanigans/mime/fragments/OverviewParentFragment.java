@@ -1,7 +1,12 @@
 package com.shemanigans.mime.fragments;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,40 +23,38 @@ import android.widget.Toast;
 
 import com.shemanigans.mime.R;
 import com.shemanigans.mime.SampleGattAttributes;
-import com.shemanigans.mime.abstractclasses.BaseFragment;
+import com.shemanigans.mime.abstractclasses.BroadcastReceiverFragment;
 import com.shemanigans.mime.dialogfragments.ConfirmationDialogFragment;
 import com.shemanigans.mime.dialogfragments.FrequencySweepDialogFragment;
 import com.shemanigans.mime.dialogfragments.SampleRateDialogFragment;
-import com.shemanigans.mime.models.DeviceData;
 import com.shemanigans.mime.models.DeviceStatus;
-import com.shemanigans.mime.models.TaubinSolution;
 import com.shemanigans.mime.services.BluetoothLeService;
 
-public class OverviewParentFragment extends BaseFragment
-        implements
-        SampleRateDialogFragment.SampleRateListener,
-        FrequencySweepDialogFragment.FrequencySweepListener,
-        ViewPager.OnPageChangeListener {
+import static android.content.Context.BIND_AUTO_CREATE;
 
-    private static final String ARG_SECTION_NUMBER = "ARG_SECTION_NUMBER";
+public class OverviewParentFragment extends BroadcastReceiverFragment
+        implements
+        ServiceConnection,
+        ViewPager.OnPageChangeListener,
+        SampleRateDialogFragment.SampleRateListener,
+        FrequencySweepDialogFragment.FrequencySweepListener {
 
     private static final int ACTIVITY = 0;
     private static final int CONTROL = 1;
     private static final int ANALYSIS = 2;
 
     //private boolean freqSweepOn = false;
-    private boolean mConnected = false;
+    private boolean connected;
 
+    private String deviceAddress;
     private DeviceStatus deviceStatus = BluetoothLeService.deviceStatus;
+    private BluetoothLeService bluetoothLeService;
 
-    public static OverviewParentFragment newInstance(int sectionNumber,
-                                                     String deviceName,
-                                                     String deviceAddress) {
+    public static OverviewParentFragment newInstance(String deviceName, String deviceAddress) {
 
         OverviewParentFragment fragment = new OverviewParentFragment();
         Bundle args = new Bundle();
 
-        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         args.putString(BluetoothLeService.DEVICE_NAME, deviceName);
         args.putString(BluetoothLeService.DEVICE_ADDRESS, deviceAddress);
         fragment.setArguments(args);
@@ -65,22 +68,40 @@ public class OverviewParentFragment extends BaseFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        deviceAddress = getArguments().getString(BluetoothLeService.DEVICE_ADDRESS);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_longterm_dca, container, false);
-        InitializeViewComponents(rootView);
+        OverviewPagerAdapter analysisPagerAdapter = new OverviewPagerAdapter(getChildFragmentManager());
+        ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.vpPager);
+        TabLayout tabs = (TabLayout) rootView.findViewById(R.id.tabs);
+
+        viewPager.setAdapter(analysisPagerAdapter);
+        viewPager.addOnPageChangeListener(this);
+        tabs.setupWithViewPager(viewPager);
+
+        viewPager.setCurrentItem(CONTROL);
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        Intent bleIntent = new Intent(getActivity(), BluetoothLeService.class);
+        getActivity().bindService(bleIntent, this, BIND_AUTO_CREATE);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_fragment_overview, menu);
-        menu.findItem(R.id.menu_connect).setVisible(!mConnected);
-        menu.findItem(R.id.menu_disconnect).setVisible(mConnected);
+        menu.findItem(R.id.menu_connect).setVisible(!connected);
+        menu.findItem(R.id.menu_disconnect).setVisible(connected);
 
-        Log.i("Test","Connected? " + mConnected);
+        Log.i("Test", "Connected? " + connected);
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -90,15 +111,16 @@ public class OverviewParentFragment extends BaseFragment
 
         switch (item.getItemId()) {
             case R.id.set_sample_rate:
-                if (getBleService() != null) {
-                    getBleService().setCharacteristicIndication(SampleGattAttributes.SAMPLE_RATE, true);
+                if (bluetoothLeService != null) {
+                    bluetoothLeService.setCharacteristicIndication(SampleGattAttributes.SAMPLE_RATE, true);
+
                     SampleRateDialogFragment sampleRateDialog = SampleRateDialogFragment.newInstance(deviceStatus.sampleRate);
                     sampleRateDialog.show(getChildFragmentManager(), "SampleRateFragment");
                 }
                 return true;
             case R.id.set_frequency_sweep:
-                if (getBleService() != null) {
-                    getBleService().setCharacteristicIndication(SampleGattAttributes.AC_FREQ, true);
+                if (bluetoothLeService != null) {
+                    bluetoothLeService.setCharacteristicIndication(SampleGattAttributes.AC_FREQ, true);
 
                     FrequencySweepDialogFragment frequencySweepDialog =
                             FrequencySweepDialogFragment.newInstance(deviceStatus.startFreq,
@@ -108,102 +130,54 @@ public class OverviewParentFragment extends BaseFragment
                 }
                 return true;
             case R.id.stop_background_service:
-                if (getBleService() != null) {
-                    getBleService().stopSelf();
+                if (bluetoothLeService != null) {
+                    bluetoothLeService.stopSelf();
                 }
+                return true;
+            case R.id.menu_connect:
+                bluetoothLeService.connect(deviceAddress);
+                return true;
+            case R.id.menu_disconnect:
+                bluetoothLeService.stopForeground(true);
+                bluetoothLeService.disconnect();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void receiveBroadcast(Intent intent) {
+    @Override
+    protected void onReceive(Context context, Intent intent) {
 
-        Controlfragment controlfragment = getControlFragment();
-        ActivityFragment activityFragment = getActivityFragment();
-        AnalysisFragment analysisFragment = getAnalysisFragment();
-
-        final String action = intent.getAction();
-
-        switch (action) {
+        switch (intent.getAction()) {
             case BluetoothLeService.GATT_CONNECTED:
-                mConnected = true;
-                controlfragment.onConnected();
-                controlfragment.setDeviceAddressTextView(BluetoothLeService.deviceAddress);
+                connected = true;
                 getActivity().invalidateOptionsMenu();
                 break;
             case BluetoothLeService.GATT_CONNECTING:
-                mConnected = false;
-                controlfragment.gattConnecting();
+                connected = false;
                 getActivity().invalidateOptionsMenu();
                 break;
             case BluetoothLeService.GATT_DISCONNECTED:
 
-                BluetoothLeService bluetoothLeService = getBleService();
-
-                mConnected = false;
-                controlfragment.onDisconnected();
-                controlfragment.clearUI();
+                connected = false;
                 bluetoothLeService.stopForeground(true);
                 //bluetoothLeService.close();
                 getActivity().invalidateOptionsMenu();
                 break;
-            case BluetoothLeService.DATA_AVAILABLE_UNKNOWN:
-                String data = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
-                controlfragment.mDataField.setText(data);
-                break;
             case BluetoothLeService.DATA_AVAILABLE_SAMPLE_RATE:
-                controlfragment.setSampleRateTextView(deviceStatus.sampleRate);
-
                 dismissConfirmationDialog();
                 break;
             case BluetoothLeService.DATA_AVAILABLE_FREQUENCY_PARAMS:
-
-                controlfragment.startFreqTextView.setText(getString(R.string.kilohertz, deviceStatus.startFreq));
-
-                if (!deviceStatus.freqSweepOn) {
-                    controlfragment.stepSizeTextView.setText(R.string.not_applicable);
-                    controlfragment.numOfIncrementsTextView.setText(R.string.not_applicable);
-                    analysisFragment.setupFragment();
-                    controlfragment.updatePlotSeries(false);
-                }
-                else {
-                    controlfragment.stepSizeTextView.setText( getString(R.string.kilohertz, deviceStatus.stepSize));
-                    controlfragment.numOfIncrementsTextView.setText(getString(R.string.number, deviceStatus.numOfIncrements));
-
-                    analysisFragment.setupFragment();
-                    controlfragment.updatePlotSeries(true);
-                }
-
                 dismissConfirmationDialog();
-                break;
-            case BluetoothLeService.DATA_AVAILABLE_BIOIMPEDANCE:
-                DeviceData deviceData = intent.getParcelableExtra(BluetoothLeService.DATA_AVAILABLE_BIOIMPEDANCE);
-                String impedanceData = deviceData.getAsCSV();
-
-                // update instantaneous data:
-                controlfragment.updateImpedanceData(impedanceData);
-                controlfragment.updatePlot(deviceData);
-                activityFragment.updatePlot(deviceData);
-                break;
-            case BluetoothLeService.DATA_AVAILABLE_TAUBIN_SOLUTION:
-                TaubinSolution taubinSolution = intent.getParcelableExtra(BluetoothLeService.DATA_AVAILABLE_TAUBIN_SOLUTION);
-                analysisFragment.onTaubinSolution(taubinSolution);
                 break;
         }
     }
 
-    private void InitializeViewComponents(View rootView) {
-
-        final OverviewPagerAdapter analysisPagerAdapter = new OverviewPagerAdapter(getChildFragmentManager());
-        final ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.vpPager);
-        final TabLayout tabs = (TabLayout) rootView.findViewById(R.id.tabs);
-
-        viewPager.setAdapter(analysisPagerAdapter);
-        viewPager.addOnPageChangeListener(this);
-        tabs.setupWithViewPager(viewPager);
-
-        viewPager.setCurrentItem(CONTROL);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unbindService(this);
     }
 
     @Override
@@ -216,7 +190,7 @@ public class OverviewParentFragment extends BaseFragment
         switch (position) {
             case ANALYSIS:
                 AnalysisFragment analysisFragment = getAnalysisFragment();
-                analysisFragment.setupFragment();
+                analysisFragment.setup();
                 break;
         }
     }
@@ -236,8 +210,8 @@ public class OverviewParentFragment extends BaseFragment
             if (getControlFragment() != null) {
                 getControlFragment().setSampleRateTextView(sampleRate);
             }
-            if (getBleService() != null) {
-                getBleService().writeCharacteristic(SampleGattAttributes.SAMPLE_RATE, sampleRate);
+            if (bluetoothLeService != null) {
+                bluetoothLeService.writeCharacteristic(SampleGattAttributes.SAMPLE_RATE, sampleRate);
                 Toast.makeText(getContext(), "New frequency: " + sampleRate, Toast.LENGTH_SHORT).show();
             }
         }
@@ -270,8 +244,8 @@ public class OverviewParentFragment extends BaseFragment
             if (getControlFragment() != null) {
                 getControlFragment().setAcFreqTextViewParams(startFreq, stepSize, numOfIncrements);
             }
-            if (getBleService() != null) {
-                getBleService().writeCharacteristicArray(SampleGattAttributes.AC_FREQ, freqValuesByte);
+            if (bluetoothLeService != null) {
+                bluetoothLeService.writeCharacteristicArray(SampleGattAttributes.AC_FREQ, freqValuesByte);
             }
 
             Toast.makeText(getContext(), R.string.freq_sweep_enabled, Toast.LENGTH_SHORT).show();
@@ -299,8 +273,8 @@ public class OverviewParentFragment extends BaseFragment
 
         byte[] freqValuesByte = {startFreq, 0, 0};
 
-        if (getBleService() != null) {
-            getBleService().writeCharacteristicArray(SampleGattAttributes.AC_FREQ, freqValuesByte);
+        if (bluetoothLeService != null) {
+            bluetoothLeService.writeCharacteristicArray(SampleGattAttributes.AC_FREQ, freqValuesByte);
         }
         if (getControlFragment() != null) {
             getControlFragment().setAcFreqTextViewParams(startFreq, deviceStatus.stepSize,
@@ -333,20 +307,25 @@ public class OverviewParentFragment extends BaseFragment
                 .findFragmentByTag(getFragmentTag(ANALYSIS));
     }
 
-    private ActivityFragment getActivityFragment() {
-        return (ActivityFragment) getChildFragmentManager()
-                .findFragmentByTag(getFragmentTag(ACTIVITY));
-    }
 
     public static String getFragmentTag(int index) {
         return "android:switcher:" + R.id.vpPager + ":" + index;
     }
 
-    public static class OverviewPagerAdapter extends FragmentPagerAdapter {
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        bluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        bluetoothLeService = null;
+    }
+
+    static class OverviewPagerAdapter extends FragmentPagerAdapter {
         private static int NUM_ITEMS = 3;
 
-        public OverviewPagerAdapter(FragmentManager fragmentManager) {
-
+        OverviewPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
         }
 
@@ -388,4 +367,80 @@ public class OverviewParentFragment extends BaseFragment
 
     }
 
+
+    /*
+    protected void onReceive(Context context, Intent intent) {
+
+        Controlfragment controlfragment = getControlFragment();
+        ActivityFragment activityFragment = getActivityFragment();
+        AnalysisFragment analysisFragment = getAnalysisFragment();
+
+        final String action = intent.getAction();
+
+        switch (action) {
+            case BluetoothLeService.GATT_CONNECTED:
+                connected = true;
+                controlfragment.onConnected();
+                controlfragment.setDeviceAddressTextView(BluetoothLeService.deviceAddress);
+                getActivity().invalidateOptionsMenu();
+                break;
+            case BluetoothLeService.GATT_CONNECTING:
+                connected = false;
+                controlfragment.gattConnecting();
+                getActivity().invalidateOptionsMenu();
+                break;
+            case BluetoothLeService.GATT_DISCONNECTED:
+
+                connected = false;
+                controlfragment.onDisconnected();
+                controlfragment.clearUI();
+                bluetoothLeService.stopForeground(true);
+                //bluetoothLeService.close();
+                getActivity().invalidateOptionsMenu();
+                break;
+            case BluetoothLeService.DATA_AVAILABLE_UNKNOWN:
+                String data = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
+                controlfragment.mDataField.setText(data);
+                break;
+            case BluetoothLeService.DATA_AVAILABLE_SAMPLE_RATE:
+                controlfragment.setSampleRateTextView(deviceStatus.sampleRate);
+
+                dismissConfirmationDialog();
+                break;
+            case BluetoothLeService.DATA_AVAILABLE_FREQUENCY_PARAMS:
+
+                controlfragment.startFreqTextView.setText(getString(R.string.kilohertz, deviceStatus.startFreq));
+
+                if (!deviceStatus.freqSweepOn) {
+                    controlfragment.stepSizeTextView.setText(R.string.not_applicable);
+                    controlfragment.numOfIncrementsTextView.setText(R.string.not_applicable);
+                    analysisFragment.setup();
+                    controlfragment.updatePlotSeries(false);
+                }
+                else {
+                    controlfragment.stepSizeTextView.setText(getString(R.string.kilohertz, deviceStatus.stepSize));
+                    controlfragment.numOfIncrementsTextView.setText(getString(R.string.number, deviceStatus.numOfIncrements));
+
+                    analysisFragment.setup();
+                    controlfragment.updatePlotSeries(true);
+                }
+
+                dismissConfirmationDialog();
+                break;
+            case BluetoothLeService.DATA_AVAILABLE_BIOIMPEDANCE:
+                DeviceData deviceData = intent.getParcelableExtra(BluetoothLeService.DATA_AVAILABLE_BIOIMPEDANCE);
+                String impedanceData = deviceData.getAsCSV();
+
+                // update instantaneous data:
+                controlfragment.updateImpedanceData(impedanceData);
+                controlfragment.updatePlot(deviceData);
+                activityFragment.updatePlot(deviceData);
+                break;
+            case BluetoothLeService.DATA_AVAILABLE_TAUBIN_SOLUTION:
+                TaubinSolution taubinSolution = intent.getParcelableExtra(BluetoothLeService.DATA_AVAILABLE_TAUBIN_SOLUTION);
+                analysisFragment.onTaubinSolution(taubinSolution);
+                break;
+        }
+    }
+     */
 }

@@ -1,5 +1,7 @@
 package com.shemanigans.mime.fragments;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -12,18 +14,16 @@ import android.widget.TextView;
 
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.StepMode;
 import com.androidplot.xy.XYPlot;
-import com.androidplot.xy.XYStepMode;
 import com.shemanigans.mime.R;
-import com.shemanigans.mime.abstractclasses.BaseFragment;
+import com.shemanigans.mime.abstractclasses.BroadcastReceiverFragment;
 import com.shemanigans.mime.models.RXpair;
 import com.shemanigans.mime.models.Series;
 import com.shemanigans.mime.models.TaubinSolution;
 import com.shemanigans.mime.services.BluetoothLeService;
 
-import java.text.DecimalFormat;
-
-public class AnalysisFragment extends BaseFragment {
+public class AnalysisFragment extends BroadcastReceiverFragment {
 
     public static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -63,7 +63,7 @@ public class AnalysisFragment extends BaseFragment {
 
         // 	Create a couple arrays of y-values to plot:
         setupPlot();
-        setupFragment();
+        setup();
         return rootView;
     }
 
@@ -74,7 +74,7 @@ public class AnalysisFragment extends BaseFragment {
         }
     }
 
-    public void setupFragment() {
+    public void setup() {
 
         boolean freqSweepOn = BluetoothLeService.deviceStatus.freqSweepOn;
 
@@ -143,6 +143,19 @@ public class AnalysisFragment extends BaseFragment {
         statsValues = null;
     }
 
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        switch (intent.getAction()) {
+            case BluetoothLeService.DATA_AVAILABLE_FREQUENCY_PARAMS:
+                setup();
+                break;
+            case BluetoothLeService.DATA_AVAILABLE_TAUBIN_SOLUTION:
+                TaubinSolution taubinSolution = intent.getParcelableExtra(BluetoothLeService.DATA_AVAILABLE_TAUBIN_SOLUTION);
+                onTaubinSolution(taubinSolution);
+                break;
+        }
+    }
+
     public void updatePlot(TaubinSolution taubinSolution) {
         measuredSeries.updateRxPairs(taubinSolution.measuredRXPairs);
         fittedSeries.updateRxPairs(taubinSolution.fittedRXPairs);
@@ -160,51 +173,51 @@ public class AnalysisFragment extends BaseFragment {
         // Format general area
         fluidStatusPlot.setBackgroundColor(Color.WHITE);
         fluidStatusPlot.getBackgroundPaint().set(bgPaint);
-        fluidStatusPlot.getGraphWidget().getBackgroundPaint().setColor(Color.TRANSPARENT);
-        fluidStatusPlot.getGraphWidget().setGridBackgroundPaint(null);
+        fluidStatusPlot.getGraph().getBackgroundPaint().setColor(Color.TRANSPARENT);
+        fluidStatusPlot.getGraph().setGridBackgroundPaint(null);
         fluidStatusPlot.setBorderStyle(XYPlot.BorderStyle.SQUARE, null, null);
-        fluidStatusPlot.getGraphWidget().setPadding(12, 12, 12, 12);
+        fluidStatusPlot.getGraph().setPadding(12, 12, 12, 12);
         fluidStatusPlot.setPlotMargins(0, 0, 0, 0);
-        fluidStatusPlot.getTitleWidget().setText("");
+        fluidStatusPlot.getTitle().setText("");
 
         fluidStatusPlot.setBorderPaint(bgPaint);
-        //fluidStatusPlot.getGraphWidget().getBorderPaint().setColor(Color.TRANSPARENT);
+        //fluidStatusPlot.getGraph().getBorderPaint().setColor(Color.TRANSPARENT);
 
         // Format domain
-        fluidStatusPlot.getDomainLabelWidget().getLabelPaint().setColor(Color.parseColor("#006bb2"));
-        fluidStatusPlot.getDomainLabelWidget().getLabelPaint().setTextSize(20);
-        fluidStatusPlot.getGraphWidget().getDomainTickLabelPaint().setTextSize(20);
-        fluidStatusPlot.getGraphWidget().getDomainTickLabelPaint().setColor(Color.BLACK);
-        fluidStatusPlot.getGraphWidget().getDomainOriginLinePaint().setColor(Color.BLACK);
-        fluidStatusPlot.getGraphWidget().getDomainGridLinePaint().setColor(Color.TRANSPARENT);
-        fluidStatusPlot.getGraphWidget().getDomainSubGridLinePaint().setColor(Color.TRANSPARENT);
-        fluidStatusPlot.setDomainStep(XYStepMode.SUBDIVIDE, 10);
+        fluidStatusPlot.getDomainTitle().getLabelPaint().setColor(Color.parseColor("#006bb2"));
+        fluidStatusPlot.getDomainTitle().getLabelPaint().setTextSize(20);
+        // fluidStatusPlot.getGraph().getDomainTickLabelPaint().setTextSize(20);
+        // fluidStatusPlot.getGraph().getDomainTickLabelPaint().setColor(Color.BLACK);
+        fluidStatusPlot.getGraph().getDomainOriginLinePaint().setColor(Color.BLACK);
+        fluidStatusPlot.getGraph().getDomainGridLinePaint().setColor(Color.TRANSPARENT);
+        fluidStatusPlot.getGraph().getDomainSubGridLinePaint().setColor(Color.TRANSPARENT);
+        fluidStatusPlot.setDomainStep(StepMode.SUBDIVIDE, 10);
         //fluidStatusPlot.setDomainStepValue(50);
         //fluidStatusPlot.setTicksPerDomainLabel(50);
         fluidStatusPlot.setDomainLabel("Resistance");
-        fluidStatusPlot.getDomainLabelWidget().pack();
-        fluidStatusPlot.setDomainValueFormat(new DecimalFormat("0"));
+        //fluidStatusPlot.getDomainLabel().pack();
+        //fluidStatusPlot.setDomainValueFormat(new DecimalFormat("0"));
 
         // Format range
-        fluidStatusPlot.getRangeLabelWidget().getLabelPaint().setColor(Color.parseColor("#006bb2"));
-        fluidStatusPlot.getRangeLabelWidget().getLabelPaint().setTextSize(20);
-        fluidStatusPlot.getGraphWidget().getRangeOriginTickLabelPaint().setTextSize(20);
-        fluidStatusPlot.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
-        fluidStatusPlot.getGraphWidget().getRangeOriginTickLabelPaint().setColor(Color.BLACK);
-        fluidStatusPlot.getGraphWidget().getRangeGridLinePaint().setColor(Color.TRANSPARENT);
-        fluidStatusPlot.getGraphWidget().getRangeSubGridLinePaint().setColor(Color.TRANSPARENT);
-        fluidStatusPlot.setRangeStep(XYStepMode.SUBDIVIDE, 10);
+        //fluidStatusPlot.getRangeLabel().getLabelPaint().setColor(Color.parseColor("#006bb2"));
+        //fluidStatusPlot.getRangeLabel().getLabelPaint().setTextSize(20);
+        //fluidStatusPlot.getGraph().getRangeOriginTickLabelPaint().setTextSize(20);
+        fluidStatusPlot.getGraph().getRangeOriginLinePaint().setColor(Color.BLACK);
+        //fluidStatusPlot.getGraph().getRangeOriginTickLabelPaint().setColor(Color.BLACK);
+        fluidStatusPlot.getGraph().getRangeGridLinePaint().setColor(Color.TRANSPARENT);
+        fluidStatusPlot.getGraph().getRangeSubGridLinePaint().setColor(Color.TRANSPARENT);
+        fluidStatusPlot.setRangeStep(StepMode.SUBDIVIDE, 10);
         //fluidStatusPlot.setRangeStepValue(50);
         //fluidStatusPlot.setTicksPerRangeLabel(50);
         fluidStatusPlot.setRangeLabel("Reactance");
-        fluidStatusPlot.getRangeLabelWidget().pack();
-        fluidStatusPlot.setRangeValueFormat(new DecimalFormat("0"));
+        //fluidStatusPlot.getRangeLabel().pack();
+        //fluidStatusPlot.setRangeValueFormat(new DecimalFormat("0"));
 
         // Format legend
 
-        fluidStatusPlot.getLegendWidget().getTextPaint().setColor(Color.parseColor("#006bb2"));
-        fluidStatusPlot.getLegendWidget().getTextPaint().setTextSize(20);
-        fluidStatusPlot.getLegendWidget().setPaddingBottom(10);
+        fluidStatusPlot.getLegend().getTextPaint().setColor(Color.parseColor("#006bb2"));
+        fluidStatusPlot.getLegend().getTextPaint().setTextSize(20);
+        fluidStatusPlot.getLegend().setPaddingBottom(10);
 
         // Add series
         fluidStatusPlot.addSeries(measuredSeries, new LineAndPointFormatter(Color.parseColor("#008b8b"), Color.BLUE, null, null));

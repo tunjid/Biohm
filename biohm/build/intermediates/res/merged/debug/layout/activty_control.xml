@@ -38,4 +38,4 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin" />
     </RelativeLayout>
-</RelativeLayout><!-- From: file:/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/res/layout/activty_control.xml -->
+</RelativeLayout>

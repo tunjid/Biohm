@@ -26,4 +26,3 @@
     <item android:state_focused="true"                                                             android:drawable="@drawable/mimetheme_list_focused_holo" />
 
 </selector>
-<!-- From: file:/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/res/drawable/mimetheme_list_selector_holo_light.xml -->

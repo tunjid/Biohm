@@ -7,4 +7,3 @@
     android:divider="@android:color/transparent"
     android:dividerHeight="0dp"
     tools:context="com.shemanigans.mime.NavigationDrawerFragment" />
-<!-- From: file:/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/res/layout/fragment_navigation_drawer.xml -->

@@ -14,4 +14,4 @@
         android:hint="@string/text_file_name"
         android:inputType="text" />
 
-</LinearLayout><!-- From: file:/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/res/layout/set_text_file_name.xml -->
+</LinearLayout>

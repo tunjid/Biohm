@@ -32,4 +32,4 @@
         android:paddingBottom="20dp"
         android:src="@drawable/mime_app_logo" />
 
-</LinearLayout><!-- From: file:/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/res/layout/fragment_back_to_scanning.xml -->
+</LinearLayout>

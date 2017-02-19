@@ -24,4 +24,4 @@
         android:layout_below="@+id/tabs"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin" />
-</RelativeLayout><!-- From: file:/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/res/layout/fragment_longterm_dca.xml -->
+</RelativeLayout>

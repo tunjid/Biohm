@@ -18,4 +18,3 @@
     <item android:state_activated="true" android:drawable="@drawable/mimetheme_list_activated_holo" />
     <item android:drawable="@android:color/transparent" />
 </selector>
-<!-- From: file:/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/res/drawable/mimetheme_activated_background_holo_light.xml -->

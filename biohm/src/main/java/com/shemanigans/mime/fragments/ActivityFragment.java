@@ -1,9 +1,10 @@
 package com.shemanigans.mime.fragments;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +14,12 @@ import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.XYPlot;
 import com.shemanigans.mime.R;
+import com.shemanigans.mime.abstractclasses.BroadcastReceiverFragment;
 import com.shemanigans.mime.models.DeviceData;
 import com.shemanigans.mime.models.Series;
+import com.shemanigans.mime.services.BluetoothLeService;
 
-public class ActivityFragment extends Fragment {
+public class ActivityFragment extends BroadcastReceiverFragment {
 
     public static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -76,6 +79,16 @@ public class ActivityFragment extends Fragment {
         textFileButtons = (RelativeLayout) rootView.findViewById(R.id.buttons);
     }
 
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        switch (intent.getAction()) {
+            case BluetoothLeService.DATA_AVAILABLE_BIOIMPEDANCE:
+                DeviceData deviceData = intent.getParcelableExtra(BluetoothLeService.DATA_AVAILABLE_BIOIMPEDANCE);
+                updatePlot(deviceData);
+                break;
+        }
+    }
+
     private void setupPlot() {
         Paint bgPaint = new Paint();
         bgPaint.setColor(Color.parseColor("#fffafafa"));
@@ -88,47 +101,47 @@ public class ActivityFragment extends Fragment {
         activityPlot.setBackgroundColor(Color.WHITE);
         activityPlot.getBackgroundPaint().set(bgPaint);
         //	activityPlot.getBackgroundPaint().setColor(Color.parseColor("#d8d8d8"));
-        activityPlot.getGraphWidget().getBackgroundPaint().setColor(Color.TRANSPARENT);
-        activityPlot.getGraphWidget().setGridBackgroundPaint(null);
+        activityPlot.getGraph().getBackgroundPaint().setColor(Color.TRANSPARENT);
+        activityPlot.getGraph().setGridBackgroundPaint(null);
         activityPlot.setBorderStyle(XYPlot.BorderStyle.SQUARE, null, null);
-        activityPlot.getGraphWidget().setPadding(15, 15, 15, 15);
+        activityPlot.getGraph().setPadding(15, 15, 15, 15);
         activityPlot.setPlotMargins(0, 0, 0, 0);
-        activityPlot.getTitleWidget().setText("");
+        activityPlot.getTitle().setText("");
 
         activityPlot.setBorderPaint(bgPaint);
-        //activityPlot.getGraphWidget().getBorderPaint().setColor(Color.TRANSPARENT);
+        //activityPlot.getGraph().getBorderPaint().setColor(Color.TRANSPARENT);
 
         // Format domain
-        activityPlot.getDomainLabelWidget().getLabelPaint().setColor(Color.parseColor("#006bb2"));
-        activityPlot.getDomainLabelWidget().getLabelPaint().setTextSize(20);
-        activityPlot.getGraphWidget().getDomainTickLabelPaint().setColor(Color.BLACK);
-        activityPlot.getGraphWidget().getDomainTickLabelPaint().setTextSize(20);
-        activityPlot.getGraphWidget().getDomainOriginTickLabelPaint().setColor(Color.BLACK);
-        activityPlot.getGraphWidget().getDomainOriginLinePaint().setColor(Color.BLACK);
-        activityPlot.getGraphWidget().getDomainGridLinePaint().setColor(Color.TRANSPARENT);
+//        activityPlot.getDomainLabelWidget().getLabelPaint().setColor(Color.parseColor("#006bb2"));
+//        activityPlot.getDomainLabelWidget().getLabelPaint().setTextSize(20);
+//        activityPlot.getGraph().getDomainTickLabelPaint().setColor(Color.BLACK);
+//        activityPlot.getGraph().getDomainTickLabelPaint().setTextSize(20);
+//        activityPlot.getGraph().getDomainOriginTickLabelPaint().setColor(Color.BLACK);
+        activityPlot.getGraph().getDomainOriginLinePaint().setColor(Color.BLACK);
+        activityPlot.getGraph().getDomainGridLinePaint().setColor(Color.TRANSPARENT);
         activityPlot.setDomainStepValue(5);
         activityPlot.setDomainLabel("Sample Index");
-        activityPlot.getDomainLabelWidget().pack();
+//        activityPlot.getDomainLabelWidget().pack();
 
 
         // Format range
-        activityPlot.getRangeLabelWidget().getLabelPaint().setColor(Color.parseColor("#006bb2"));
-        activityPlot.getRangeLabelWidget().getLabelPaint().setTextSize(20);
-        activityPlot.getGraphWidget().getRangeTickLabelPaint().setColor(Color.BLACK);
-        activityPlot.getGraphWidget().getRangeTickLabelPaint().setTextSize(20);
-        activityPlot.getGraphWidget().getRangeOriginTickLabelPaint().setColor(Color.BLACK);
-        activityPlot.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
-        activityPlot.getGraphWidget().getRangeGridLinePaint().setColor(Color.TRANSPARENT);
-        activityPlot.getGraphWidget().getRangeSubGridLinePaint().setColor(Color.TRANSPARENT);
+//        activityPlot.getRangeLabelWidget().getLabelPaint().setColor(Color.parseColor("#006bb2"));
+//        activityPlot.getRangeLabelWidget().getLabelPaint().setTextSize(20);
+//        activityPlot.getGraph().getRangeTickLabelPaint().setColor(Color.BLACK);
+//        activityPlot.getGraph().getRangeTickLabelPaint().setTextSize(20);
+//        activityPlot.getGraph().getRangeOriginTickLabelPaint().setColor(Color.BLACK);
+        activityPlot.getGraph().getRangeOriginLinePaint().setColor(Color.BLACK);
+        activityPlot.getGraph().getRangeGridLinePaint().setColor(Color.TRANSPARENT);
+        activityPlot.getGraph().getRangeSubGridLinePaint().setColor(Color.TRANSPARENT);
         activityPlot.setRangeLabel("Data");
-        activityPlot.setTicksPerRangeLabel(3);
-        activityPlot.getRangeLabelWidget().pack();
+//        activityPlot.setTicksPerRangeLabel(3);
+//        activityPlot.getRangeLabelWidget().pack();
 
         // Format legend
 
-        activityPlot.getLegendWidget().getTextPaint().setColor(Color.parseColor("#006bb2"));
-        activityPlot.getLegendWidget().getTextPaint().setTextSize(20);
-        activityPlot.getLegendWidget().setPaddingBottom(10);
+        activityPlot.getLegend().getTextPaint().setColor(Color.parseColor("#006bb2"));
+        activityPlot.getLegend().getTextPaint().setTextSize(20);
+        activityPlot.getLegend().setPaddingBottom(10);
 
         // Add series
 

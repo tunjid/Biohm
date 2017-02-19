@@ -23,4 +23,4 @@
         android:title="@string/menu_stop"
         compat:showAsAction="ifRoom|withText"/>
 
-</menu><!-- From: file:/Users/Shemanigans/AndroidstudioProjects/Biohm/biohm/src/main/res/menu/scan.xml -->
+</menu>
