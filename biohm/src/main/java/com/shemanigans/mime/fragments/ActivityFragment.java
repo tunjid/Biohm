@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
@@ -28,8 +27,6 @@ public class ActivityFragment extends BroadcastReceiverFragment {
     private Series.GenericSeries xSeries = new Series.GenericSeries("X");
 
     // Declare UI references
-    //public SwitchCompat enableNotifications;
-    public RelativeLayout textFileButtons;
     private XYPlot activityPlot = null;
 
     /**
@@ -51,7 +48,7 @@ public class ActivityFragment extends BroadcastReceiverFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_activity, container, false);
-        InitializeViewComponents(rootView);
+        activityPlot = (XYPlot) rootView.findViewById(R.id.activityPlot);
 
         setupPlot();
         return rootView;
@@ -61,7 +58,6 @@ public class ActivityFragment extends BroadcastReceiverFragment {
     public void onDestroyView() {
         super.onDestroyView();
 
-        textFileButtons = null;
         activityPlot = null;
     }
 
@@ -72,11 +68,6 @@ public class ActivityFragment extends BroadcastReceiverFragment {
 
         // redraw the Plots:
         activityPlot.redraw();
-    }
-
-    private void InitializeViewComponents(View rootView) {
-        activityPlot = (XYPlot) rootView.findViewById(R.id.activityPlot);
-        textFileButtons = (RelativeLayout) rootView.findViewById(R.id.buttons);
     }
 
     @Override

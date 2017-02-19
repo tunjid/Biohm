@@ -48,17 +48,14 @@ public class BLEScanner {
 
     @SuppressWarnings("deprecation")
     public void startScan() {
-//        if (hasLollipop) bluetoothAdapter.getBluetoothLeScanner().startScan(newCallback);
-//        else bluetoothAdapter.startLeScan(oldCallback);
-         bluetoothAdapter.startLeScan(oldCallback);
-
+        if (hasLollipop) bluetoothAdapter.getBluetoothLeScanner().startScan(newCallback);
+        else bluetoothAdapter.startLeScan(oldCallback);
     }
 
     @SuppressWarnings("deprecation")
     public void stopScan() {
-//        if (hasLollipop) bluetoothAdapter.getBluetoothLeScanner().stopScan(newCallback);
-//        else bluetoothAdapter.stopLeScan(oldCallback);
-         bluetoothAdapter.stopLeScan(oldCallback);
+        if (hasLollipop) bluetoothAdapter.getBluetoothLeScanner().stopScan(newCallback);
+        else bluetoothAdapter.stopLeScan(oldCallback);
     }
 
     /**

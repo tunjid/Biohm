@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -55,6 +56,12 @@ public class ScanFragment extends BaseFragment
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -63,6 +70,7 @@ public class ScanFragment extends BaseFragment
         recyclerView = (RecyclerView) rootView.findViewById(R.id.list);
         recyclerView.setAdapter(new ScanAdapter(this, bleDevices));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
 
         return rootView;
     }
@@ -96,8 +104,8 @@ public class ScanFragment extends BaseFragment
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.scan, menu);
 
-        menu.findItem(R.id.menu_stop).setVisible(!isScanning);
-        menu.findItem(R.id.menu_scan).setVisible(isScanning);
+        menu.findItem(R.id.menu_stop).setVisible(isScanning);
+        menu.findItem(R.id.menu_scan).setVisible(!isScanning);
 
         if (!isScanning) {
             menu.findItem(R.id.menu_refresh).setVisible(false);

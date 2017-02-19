@@ -11,13 +11,13 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -55,9 +55,8 @@ public class Controlfragment extends BroadcastReceiverFragment
     public TextView sampleRateTextView, startFreqTextView, stepSizeTextView, numOfIncrementsTextView;
     public TextView summaryTableHeader;
     public View startButtonBar;
-    public SwitchCompat enableNotifications;
+    public Switch enableNotifications;
     public ProgressBar connectionStateBar;
-    public RelativeLayout textFileButtons;
     public TableLayout summaryTable;
     public Button exportToText, clearTextFile, startButton;
     public XYPlot bioimpedancePlot = null;
@@ -88,7 +87,7 @@ public class Controlfragment extends BroadcastReceiverFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_dca, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_control, container, false);
 
         deviceAddress = (TextView) rootView.findViewById(R.id.device_address);
         exportToText = (Button) rootView.findViewById(R.id.export_to_text);
@@ -100,9 +99,8 @@ public class Controlfragment extends BroadcastReceiverFragment
         numOfIncrementsTextView = (TextView) rootView.findViewById(R.id.num_of_increments);
         startButton = (Button) rootView.findViewById(R.id.begin);
         startButtonBar = rootView.findViewById(R.id.begin_bar);
-        enableNotifications = (SwitchCompat) rootView.findViewById(R.id.enable_notifications);
+        enableNotifications = (Switch) rootView.findViewById(R.id.enable_notifications);
         connectionStateBar = (ProgressBar) rootView.findViewById(R.id.connection_state_bar);
-        textFileButtons = (RelativeLayout) rootView.findViewById(R.id.buttons);
         mConnectionState = (TextView) rootView.findViewById(R.id.connection_state);
         mDataField = (TextView) rootView.findViewById(R.id.data_value);
         summaryTableHeader = (TextView) rootView.findViewById(R.id.parameter_summary);
@@ -149,7 +147,6 @@ public class Controlfragment extends BroadcastReceiverFragment
         startButtonBar = null;
         enableNotifications = null;
         connectionStateBar = null;
-        textFileButtons = null;
         summaryTable = null;
         bioimpedancePlot = null;
     }
@@ -245,7 +242,7 @@ public class Controlfragment extends BroadcastReceiverFragment
 
         // Turn off notifications.
         if (!enableNotifications.isChecked()) {
-            textFileButtons.setVisibility(View.VISIBLE);
+            //textFileButtons.setVisibility(View.VISIBLE);
 
             /*Intent intent = new Intent(getActivity(), ServiceBinder.class);
             getActivity().stopService(intent);*/
@@ -283,7 +280,7 @@ public class Controlfragment extends BroadcastReceiverFragment
         //.setContentIntent(activityPendingIntent);
 
         bioimpedancePlot.setVisibility(View.VISIBLE);
-        textFileButtons.setVisibility(View.VISIBLE);
+        //textFileButtons.setVisibility(View.VISIBLE);
 
         bluetoothLeService.startForeground(BluetoothLeService.ONGOING_NOTIFICATION_ID, notificationBuilder.build());
         bluetoothLeService.setCharacteristicNotification(SampleGattAttributes.BIOIMPEDANCE_DATA, true);

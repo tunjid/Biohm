@@ -13,12 +13,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_send"
-        android:textSize="20sp" />
+        android:textSize="@dimen/small_text" />
 
     <TextView
         android:id="@+id/device_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_send"
-        android:textSize="20sp" />
+        android:textSize="@dimen/small_text" />
 </LinearLayout>

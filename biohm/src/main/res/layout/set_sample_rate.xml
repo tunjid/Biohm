@@ -25,7 +25,7 @@
         android:layout_marginRight="4dp"
         android:layout_marginTop="4dp"
         android:textColor="@color/primary"
-        android:textSize="20sp"
+        android:textSize="@dimen/small_text"
         android:textStyle="bold|italic" />
 
     <SeekBar
