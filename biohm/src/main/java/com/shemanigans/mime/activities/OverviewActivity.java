@@ -40,12 +40,6 @@ public class OverviewActivity extends BaseActivity
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        finish();
-    }
-
-    @Override
     public void onNavigationDrawerItemSelected(int position) {
         switch (position) {
             case LIVE_DATA:

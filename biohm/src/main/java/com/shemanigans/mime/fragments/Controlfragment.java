@@ -209,53 +209,19 @@ public class Controlfragment extends BroadcastReceiverFragment
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.enable_notifications:
-                enableNotifications();
+                boolean isEnabled = notificationSwitch.isChecked();
+                bioimpedancePlot.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
+                bluetoothLeService.setCharacteristicNotification(SampleGattAttributes.BIOIMPEDANCE_DATA, isEnabled);
                 break;
             case R.id.clear_text_file:
-                clearTextFile();
                 break;
             case R.id.export_to_text:
-                exportToText();
                 break;
         }
-    }
-
-
-    public void enableNotifications() {
-        boolean isEnabled = notificationSwitch.isEnabled();
-        bioimpedancePlot.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
-        bluetoothLeService.setCharacteristicNotification(SampleGattAttributes.BIOIMPEDANCE_DATA, isEnabled);
-
-        // Turn on notifications.
-        /*if (notificationSwitch.isChecked()) {
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getActivity())
-                    .setSmallIcon(R.drawable.ic_notification)
-                    .setContentTitle(getString(R.string.sampling_data))
-                    .setContentText(getText(R.string.connected));
-            //.setContentIntent(activityPendingIntent);
-
-            bioimpedancePlot.setVisibility(View.VISIBLE);
-
-            bluetoothLeService.startForeground(BluetoothLeService.ONGOING_NOTIFICATION_ID, notificationBuilder.build());
-            bluetoothLeService.setCharacteristicNotification(SampleGattAttributes.BIOIMPEDANCE_DATA, true);
-        }
-        // Turn off notifications.
-        else {
-            bluetoothLeService.stopForeground(true);
-            bluetoothLeService.setCharacteristicNotification(SampleGattAttributes.BIOIMPEDANCE_DATA, false);
-        }*/
-    }
-
-    public void exportToText() {
-
-    }
-
-    public void clearTextFile() {
-
     }
 
     public void updateImpedanceData(String data) {
-        mDataField.setText(String.format(getString(R.string.label_data), data));
+        mDataField.setText(getString(R.string.label_data, data));
     }
 
     public void clearUI() {
@@ -263,7 +229,7 @@ public class Controlfragment extends BroadcastReceiverFragment
     }
 
     public void setDeviceAddressTextView(String mDeviceAddress) {
-        deviceAddress.setText(String.format(getString(R.string.label_device_address), mDeviceAddress));
+        deviceAddress.setText(getString(R.string.label_device_address, mDeviceAddress));
     }
 
 

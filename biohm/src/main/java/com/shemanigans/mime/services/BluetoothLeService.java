@@ -25,7 +25,6 @@ import android.widget.Toast;
 
 import com.shemanigans.mime.R;
 import com.shemanigans.mime.SampleGattAttributes;
-import com.shemanigans.mime.activities.MainActivity;
 import com.shemanigans.mime.activities.OverviewActivity;
 import com.shemanigans.mime.fragments.ScanFragment;
 import com.shemanigans.mime.models.DeviceData;
@@ -236,22 +235,20 @@ public class BluetoothLeService extends Service
 
         isBound = false;
 
-        boolean isConnected = isConnected();
+        if (isConnected()) {
+            final Intent resumeIntent = new Intent(this, OverviewActivity.class);
 
-        final Intent resumeIntent = isConnected
-                ? new Intent(this, OverviewActivity.class)
-                : new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        final PendingIntent activityPendingIntent = PendingIntent.getActivity(
-                this, 0, resumeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent activityPendingIntent = PendingIntent.getActivity(
+                    this, 0, resumeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle(getString(isConnected ? R.string.connected_to_device : R.string.disconnected))
-                .setContentText(getText(isConnected ? R.string.connected : R.string.disconnected_from_device))
-                .setContentIntent(activityPendingIntent);
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setContentTitle(getString(R.string.connected_to_device))
+                    .setContentText(getText(R.string.connected))
+                    .setContentIntent(activityPendingIntent);
 
-        if (isConnected) {
             resumeIntent.putExtra(DEVICE_NAME, deviceName);
             resumeIntent.putExtra(DEVICE_ADDRESS, deviceAddress);
             startForeground(BluetoothLeService.ONGOING_NOTIFICATION_ID, notificationBuilder.build());
