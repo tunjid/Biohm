@@ -3,7 +3,9 @@ package com.shemanigans.mime.models;
 import com.androidplot.xy.XYSeries;
 import com.shemanigans.mime.services.BluetoothLeService;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class for plotting
@@ -11,13 +13,13 @@ import java.util.ArrayList;
 public class Series {
 
     public static class RXSeries implements XYSeries {
-        private ArrayList<RXpair> rxPairs;
+        private List<RXpair> rxPairs;
 
         public RXSeries() {
             rxPairs = new ArrayList<>(100);
         }
 
-        public void updateRxPairs(ArrayList<RXpair> rxPairs) {
+        public void updateRxPairs(List<RXpair> rxPairs) {
             this.rxPairs = rxPairs;
             //this.rxPairs.addAll(rxPairs);
         }
@@ -50,7 +52,7 @@ public class Series {
 
         public GenericSeries(String title) {
             this.title = title;
-            data = new FixedCircularQueue<>(BluetoothLeService.HISTORY_SIZE);
+            data = new FixedCircularQueue<>(Number.class, BluetoothLeService.HISTORY_SIZE);
         }
 
         public void addData(Number dataPoint) {
@@ -78,18 +80,21 @@ public class Series {
         }
     }
 
-    public static class FixedCircularQueue<E> {
+    private static class FixedCircularQueue<E> {
 
         private final int size;
-        private final Object[] data;
+        private final E[] data;
 
         private boolean isOverwritten = false;
         private int cursor = -1;
         private int firstItem = 0;
 
-        public FixedCircularQueue(int size) {
+        @SuppressWarnings("unchecked")
+        FixedCircularQueue(Class<E> clazz, int size) {
             this.size = size;
-            data = new Object[size];
+            // Use Array native method to create array
+            // of a type only known at run time
+            data = (E[]) Array.newInstance(clazz, size);
         }
 
         public void add(E object) {
@@ -105,15 +110,15 @@ public class Series {
             }
         }
 
-        public E get(int index) {
+        E get(int index) {
             int check = firstItem + index;
 
             int finalIndex = check >= size ? check - size : check;
 
-            return (E)data[finalIndex];
+            return data[finalIndex];
         }
 
-        public int size() {
+        int size() {
             return isOverwritten ? size : cursor + 1;
         }
 

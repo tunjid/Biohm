@@ -1,7 +1,6 @@
 package com.shemanigans.mime.services;
 
 import android.annotation.TargetApi;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -34,8 +33,10 @@ import com.shemanigans.mime.models.RXpair;
 import com.shemanigans.mime.models.TaubinSolution;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.UUID;
 
@@ -86,13 +87,10 @@ public class BluetoothLeService extends Service
 
     private String connectionState = GATT_DISCONNECTED;
 
-    private BluetoothGattCharacteristic impedanceCharacteristic;
-    private BluetoothGattCharacteristic sampleRateCharacteristic;
-    private BluetoothGattCharacteristic ACFrequencyCharacteristic;
-
     // Queue for reading multiple characteristics due to delay induced by callback.
+    private List<RXpair> curvePoints = new ArrayList<>();
     private Queue<BluetoothGattCharacteristic> readQueue = new LinkedList<>();
-    private ArrayList<RXpair> curvePoints = new ArrayList<>();
+    private Map<String, BluetoothGattCharacteristic> characteristicMap = new HashMap<>();
 
     public static DeviceStatus deviceStatus = new DeviceStatus();
 
@@ -246,19 +244,13 @@ public class BluetoothLeService extends Service
                     .setContentText(getText(R.string.connected))
                     .setContentIntent(activityPendingIntent);
 
-            Notification notification = notificationBuilder.build();
-            //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-            startForeground(ONGOING_NOTIFICATION_ID, notification);
-            //notificationManager.notify(ONGOING_NOTIFICATION_ID, notification);
-            Log.i(TAG, "Service in foreground");
+            startForeground(ONGOING_NOTIFICATION_ID, notificationBuilder.build());
         }
         else {
             stopForeground(true);
             close();
         }
 
-        Log.i(TAG, "Service unbound");
         return super.onUnbind(intent);
     }
 
@@ -412,9 +404,8 @@ public class BluetoothLeService extends Service
      * released properly.
      */
     public void close() {
-        if (bluetoothGatt == null) {
-            return;
-        }
+        if (bluetoothGatt == null) return;
+
         bluetoothGatt.close();
         bluetoothGatt = null;
     }
@@ -449,7 +440,7 @@ public class BluetoothLeService extends Service
             return;
         }
 
-        BluetoothGattCharacteristic characteristic = getCharacteristic(uuid);
+        BluetoothGattCharacteristic characteristic = characteristicMap.get(uuid);
 
         characteristic.setValue(value, BluetoothGattCharacteristic.FORMAT_UINT8, 0);
         bluetoothGatt.writeCharacteristic(characteristic);
@@ -460,7 +451,7 @@ public class BluetoothLeService extends Service
             showToast(this, "BluetoothAdapter not initialized");
             return;
         }
-        BluetoothGattCharacteristic characteristic = getCharacteristic(uuid);
+        BluetoothGattCharacteristic characteristic = characteristicMap.get(uuid);
 
         characteristic.setValue(values);
         bluetoothGatt.writeCharacteristic(characteristic);
@@ -479,7 +470,7 @@ public class BluetoothLeService extends Service
             return;
         }
 
-        BluetoothGattCharacteristic characteristic = getCharacteristic(uuid);
+        BluetoothGattCharacteristic characteristic = characteristicMap.get(uuid);
 
         if (characteristic == null) {
             showToast(this);
@@ -507,7 +498,7 @@ public class BluetoothLeService extends Service
             return;
         }
 
-        BluetoothGattCharacteristic characteristic = getCharacteristic(uuid);
+        BluetoothGattCharacteristic characteristic = characteristicMap.get(uuid);
 
         if (characteristic == null) {
             showToast(this);
@@ -520,20 +511,6 @@ public class BluetoothLeService extends Service
 
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
         bluetoothGatt.writeDescriptor(descriptor);
-    }
-
-    private BluetoothGattCharacteristic getCharacteristic(String uuid) {
-
-        switch (uuid) {
-            case SampleGattAttributes.SAMPLE_RATE:
-                return sampleRateCharacteristic;
-            case SampleGattAttributes.AC_FREQ:
-                return ACFrequencyCharacteristic;
-            case SampleGattAttributes.BIOIMPEDANCE_DATA:
-                return impedanceCharacteristic;
-            default:
-                throw new IllegalArgumentException("Invalid UUID sting");
-        }
     }
 
     /**
@@ -564,19 +541,14 @@ public class BluetoothLeService extends Service
 
             // Loops through available Characteristics and find the ones I'm interested in
             for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
-                switch (gattCharacteristic.getUuid().toString()) {
-                    case SampleGattAttributes.BIOIMPEDANCE_DATA:
-                        impedanceCharacteristic = gattCharacteristic;
-                        break;
-                    case SampleGattAttributes.SAMPLE_RATE:
-                        sampleRateCharacteristic = gattCharacteristic;
-                        readCharacteristic(sampleRateCharacteristic);
-                        break;
+                String uuid = gattCharacteristic.getUuid().toString();
+                switch (uuid) {
                     case SampleGattAttributes.AC_FREQ:
-                        ACFrequencyCharacteristic = gattCharacteristic;
-                        readCharacteristic(ACFrequencyCharacteristic);
+                    case SampleGattAttributes.SAMPLE_RATE:
+                        readCharacteristic(gattCharacteristic);
                         break;
                 }
+                characteristicMap.put(uuid, gattCharacteristic);
             }
         }
     }
@@ -614,7 +586,7 @@ public class BluetoothLeService extends Service
 
     }
 
-    private void solveTaubinAsync(ArrayList<RXpair> circle) {
+    private void solveTaubinAsync(List<RXpair> circle) {
         TaubinSolution.taubinFit(circle, deviceStatus.endFreq)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())

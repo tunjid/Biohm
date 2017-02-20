@@ -33,14 +33,14 @@ public class TaubinSolution implements Parcelable, XYSeries {
     public double xOffset;
     public double rOffset;
     public double radius;
-    public ArrayList<RXpair> measuredRXPairs = new ArrayList<>(100);
-    public ArrayList<RXpair> fittedRXPairs = new ArrayList<>(100);
+    public List<RXpair> measuredRXPairs = new ArrayList<>(100);
+    public List<RXpair> fittedRXPairs = new ArrayList<>(100);
 
     private TaubinSolution() {
 
     }
 
-    public static Observable<TaubinSolution> taubinFit(final ArrayList<RXpair> circleCoordinates, final double endFrequency) {
+    public static Observable<TaubinSolution> taubinFit(final List<RXpair> circleCoordinates, final double endFrequency) {
 
         // Defer so this isn't called till the observable is subscribed to.
         return rx.Observable.defer(new Func0<Observable<TaubinSolution>>() {
