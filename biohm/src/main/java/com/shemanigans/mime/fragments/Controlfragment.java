@@ -145,6 +145,7 @@ public class Controlfragment extends BroadcastReceiverFragment
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         bluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+        setDeviceAddressTextView(bluetoothLeService.getDeviceAddress());
         if (bluetoothLeService.isConnected()) onConnected();
     }
 
