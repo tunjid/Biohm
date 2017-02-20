@@ -184,11 +184,11 @@ public class ScanFragment extends BaseFragment
     public void onBluetoothDeviceClicked(final BluetoothDevice bluetoothDevice) {
         if (bluetoothDevice == null) return;
 
-//        final Intent bleServiceIntent = new Intent(getActivity(), BluetoothLeService.class);
+        final Intent bleServiceIntent = new Intent(getActivity(), BluetoothLeService.class);
         final Intent overviewActivityIntent = new Intent(getActivity(), OverviewActivity.class);
 
-//        bleServiceIntent.putExtra(BluetoothLeService.DEVICE_NAME, bluetoothDevice.getName());
-//        bleServiceIntent.putExtra(BluetoothLeService.DEVICE_ADDRESS, bluetoothDevice.getAddress());
+        bleServiceIntent.putExtra(BluetoothLeService.DEVICE_NAME, bluetoothDevice.getName());
+        bleServiceIntent.putExtra(BluetoothLeService.DEVICE_ADDRESS, bluetoothDevice.getAddress());
 
         String name = bluetoothDevice.getName() == null ? "Namesfbshfvsvfshfsfbwhbfhjwvswbddsajhdu" : bluetoothDevice.getName();
         overviewActivityIntent.putExtra(BluetoothLeService.DEVICE_NAME, name);
@@ -196,7 +196,7 @@ public class ScanFragment extends BaseFragment
 
         if (isScanning) scanLeDevice(false);
 
-        //getActivity().startService(bleServiceIntent);
+        getActivity().startService(bleServiceIntent);
         startActivity(overviewActivityIntent);
     }
 

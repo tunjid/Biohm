@@ -75,7 +75,8 @@ public class SampleRateDialogFragment extends BaseDialogFragment {
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        mListener.onDialogPositiveClickSampleRate(sampleRate);
+                        byte newValue = (byte) ((seekBar.getProgress() + 1) * 5);
+                        mListener.onDialogPositiveClickSampleRate(newValue);
                         dismiss();
                     }
                 })

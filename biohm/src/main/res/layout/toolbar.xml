@@ -4,7 +4,5 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/primary"
-    app:popupTheme="@style/Theme.AppCompat.NoActionBar"
-    app:theme="@style/Theme.AppCompat.NoActionBar">
-
-</android.support.v7.widget.Toolbar>
+    android:theme="@style/Theme.AppCompat.NoActionBar"
+    app:popupTheme="@style/Theme.AppCompat.NoActionBar"/>

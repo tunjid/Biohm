@@ -144,6 +144,8 @@ public class AnalysisFragment extends BroadcastReceiverFragment {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (!isVisible()) return;
+
         switch (intent.getAction()) {
             case BluetoothLeService.DATA_AVAILABLE_FREQUENCY_PARAMS:
                 setup();

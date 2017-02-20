@@ -43,6 +43,12 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() <= 1) finish();
+        else getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
     public void onBackStackChanged() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment_container);
 

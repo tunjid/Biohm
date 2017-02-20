@@ -1,6 +1,7 @@
 package com.shemanigans.mime.services;
 
 import android.annotation.TargetApi;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -37,7 +38,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -54,8 +54,7 @@ public class BluetoothLeService extends Service
 
     private boolean isBound = false;
 
-    // private static final int GATT_INDETERMINATE = 8;
-    public static final int ONGOING_NOTIFICATION_ID = 2;
+    public static final int ONGOING_NOTIFICATION_ID = 1;
     public static final int HISTORY_SIZE = 270;
 
     private BluetoothAdapter bluetoothAdapter;
@@ -234,7 +233,9 @@ public class BluetoothLeService extends Service
         if (isConnected()) {
             final Intent resumeIntent = new Intent(this, OverviewActivity.class);
 
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            resumeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            resumeIntent.putExtra(DEVICE_NAME, deviceName);
+            resumeIntent.putExtra(DEVICE_ADDRESS, deviceAddress);
 
             PendingIntent activityPendingIntent = PendingIntent.getActivity(
                     this, 0, resumeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -245,15 +246,19 @@ public class BluetoothLeService extends Service
                     .setContentText(getText(R.string.connected))
                     .setContentIntent(activityPendingIntent);
 
-            resumeIntent.putExtra(DEVICE_NAME, deviceName);
-            resumeIntent.putExtra(DEVICE_ADDRESS, deviceAddress);
-            startForeground(BluetoothLeService.ONGOING_NOTIFICATION_ID, notificationBuilder.build());
+            Notification notification = notificationBuilder.build();
+            //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            startForeground(ONGOING_NOTIFICATION_ID, notification);
+            //notificationManager.notify(ONGOING_NOTIFICATION_ID, notification);
+            Log.i(TAG, "Service in foreground");
         }
         else {
-            stopForeground(false);
+            stopForeground(true);
             close();
         }
 
+        Log.i(TAG, "Service unbound");
         return super.onUnbind(intent);
     }
 
@@ -611,9 +616,8 @@ public class BluetoothLeService extends Service
 
     private void solveTaubinAsync(ArrayList<RXpair> circle) {
         TaubinSolution.taubinFit(circle, deviceStatus.endFreq)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .timeout(18, TimeUnit.SECONDS)
                 .subscribe(this);
     }
 

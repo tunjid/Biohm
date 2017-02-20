@@ -140,7 +140,6 @@ public class OverviewParentFragment extends BroadcastReceiverFragment
                     bluetoothLeService.connect(deviceAddress);
                     return true;
                 case R.id.menu_disconnect:
-                    bluetoothLeService.stopForeground(true);
                     bluetoothLeService.disconnect();
                     return true;
             }
@@ -150,6 +149,7 @@ public class OverviewParentFragment extends BroadcastReceiverFragment
 
     @Override
     protected void onReceive(Context context, Intent intent) {
+        if (!isVisible()) return;
 
         switch (intent.getAction()) {
             case BluetoothLeService.GATT_CONNECTED:
@@ -161,10 +161,7 @@ public class OverviewParentFragment extends BroadcastReceiverFragment
                 getActivity().invalidateOptionsMenu();
                 break;
             case BluetoothLeService.GATT_DISCONNECTED:
-
                 connected = false;
-                bluetoothLeService.stopForeground(true);
-                //bluetoothLeService.close();
                 getActivity().invalidateOptionsMenu();
                 break;
             case BluetoothLeService.DATA_AVAILABLE_SAMPLE_RATE:
@@ -214,7 +211,7 @@ public class OverviewParentFragment extends BroadcastReceiverFragment
             }
             if (bluetoothLeService != null) {
                 bluetoothLeService.writeCharacteristic(SampleGattAttributes.SAMPLE_RATE, sampleRate);
-                Toast.makeText(getContext(), "New frequency: " + sampleRate, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "New sample rate: " + sampleRate, Toast.LENGTH_SHORT).show();
             }
         }
         catch (Exception e) {

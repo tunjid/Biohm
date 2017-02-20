@@ -50,9 +50,8 @@ public abstract class BroadcastReceiverFragment extends BaseFragment {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
-
         LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(gattUpdateReceiver);
+        super.onDestroy();
     }
 
     protected abstract void onReceive(Context context, Intent intent);

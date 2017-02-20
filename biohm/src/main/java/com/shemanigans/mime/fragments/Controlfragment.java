@@ -154,6 +154,8 @@ public class Controlfragment extends BroadcastReceiverFragment
     }
 
     public void onReceive(Context context, Intent intent) {
+        if (!isVisible()) return;
+
         switch (intent.getAction()) {
             case BluetoothLeService.GATT_CONNECTED:
                 onConnected();

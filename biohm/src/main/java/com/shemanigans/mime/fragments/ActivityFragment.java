@@ -72,6 +72,8 @@ public class ActivityFragment extends BroadcastReceiverFragment {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (!isVisible()) return;
+
         switch (intent.getAction()) {
             case BluetoothLeService.DATA_AVAILABLE_BIOIMPEDANCE:
                 DeviceData deviceData = intent.getParcelableExtra(BluetoothLeService.DATA_AVAILABLE_BIOIMPEDANCE);

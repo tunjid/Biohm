@@ -36,7 +36,7 @@ public class TaubinSolution implements Parcelable, XYSeries {
     public ArrayList<RXpair> measuredRXPairs = new ArrayList<>(100);
     public ArrayList<RXpair> fittedRXPairs = new ArrayList<>(100);
 
-    public TaubinSolution() {
+    private TaubinSolution() {
 
     }
 
@@ -109,7 +109,6 @@ public class TaubinSolution implements Parcelable, XYSeries {
                     yold = ynew;
                     ynew = A0 + xnew * (A1 + xnew * (A2 + xnew * A3));
                     if (Math.abs(ynew) > Math.abs(yold)) {
-                        System.out.println("Newton-Taubin goes wrong direction: |ynew| > |yold|");
                         xnew = 0;
                         break;
                     }
@@ -120,11 +119,9 @@ public class TaubinSolution implements Parcelable, XYSeries {
                         break;
                     }
                     if (i >= iterMax) {
-                        System.out.println("Newton-Taubin will not converge");
                         xnew = 0;
                     }
                     if (xnew < 0) {
-                        System.out.println("Newton-Taubin negative root:  x = " + xnew);
                         xnew = 0;
                     }
                 }
@@ -206,13 +203,13 @@ public class TaubinSolution implements Parcelable, XYSeries {
         return answer;
     }
 
-    public static double fittedX(double resistance, double radius, double R_Offset, double X_Offset) {
+    private static double fittedX(double resistance, double radius, double R_Offset, double X_Offset) {
         double answer;
         answer = Math.sqrt(Math.pow(radius, 2) - Math.pow((resistance - R_Offset), 2)) + X_Offset;
         return answer;
     }
 
-    public static double[] quadratic(double p, double q, double s) {
+    private static double[] quadratic(double p, double q, double s) {
         double[] answer = {1, 1};
         answer[0] = ((2 * p) + Math.sqrt((4 * p * p) - (4 * (p * p + q * q - s * s)))) / 2;
         answer[1] = ((2 * p) - Math.sqrt((4 * p * p) - (4 * (p * p + q * q - s * s)))) / 2;
@@ -220,26 +217,26 @@ public class TaubinSolution implements Parcelable, XYSeries {
     }
 
 
-    public StringBuilder appendAnalysisData() {
+    /*public StringBuilder appendAnalysisData() {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%.1f", this.re));
+        sb.append(String.format(Locale.US, "%.1f", this.re));
         sb.append(",");
-        sb.append(String.format("%.1f", this.ri));
+        sb.append(String.format(Locale.US, "%.1f", this.ri));
         sb.append(",");
-        sb.append(String.format("%.2e", this.c));
+        sb.append(String.format(Locale.US, "%.2e", this.c));
         sb.append(",");
-        sb.append(String.format("%.1f", this.RMSE));
+        sb.append(String.format(Locale.US, "%.1f", this.RMSE));
         sb.append(",");
-        sb.append(String.format("%.2f", this.RSQ));
+        sb.append(String.format(Locale.US, "%.2f", this.RSQ));
         sb.append(",");
-        sb.append(String.format("%.3f", this.alpha));
+        sb.append(String.format(Locale.US, "%.3f", this.alpha));
         sb.append(",");
-        sb.append(String.format("%.2f", this.fPeak));
+        sb.append(String.format(Locale.US, "%.2f", this.fPeak));
 
         return sb;
-    }
+    }*/
 
-    protected TaubinSolution(Parcel in) {
+    private TaubinSolution(Parcel in) {
         rNaught = in.readDouble();
         rInfinity = in.readDouble();
         alpha = in.readDouble();
